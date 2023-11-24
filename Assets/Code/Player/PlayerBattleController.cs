@@ -11,13 +11,29 @@ public class PlayerBattleController : MonoBehaviour
 
 
 
+    [Header("# Targeting Stat")]
+    [Space]
+    [SerializeField] GameObject nearTarget;
     [SerializeField] GameObject selectTarget;
+    [Space]
+    [Header("# CurMode Value")]
+    [Space]
     [SerializeField] int curModeValue;
+    [Space]
+    [Header("# Weapone GameObject in Hierarchy")]
+    [Space]
+    [SerializeField] BoxCollider attackCollider;
+    [SerializeField] float FirstAttackDelayTime;
+    [SerializeField] float AttackActiveDurationTime;
+    [Space]
     [SerializeField] GameObject[] MeleeModeWeapenSet;
-    [SerializeField] bool leftClick;
-    [SerializeField] bool rightClick;
-    [SerializeField] bool tapClick;
-    [SerializeField] bool isTargetingOnOff;
+   
+    
+    
+    bool leftClick;
+    bool rightClick;
+    bool tapClick;
+    bool isTargetingOnOff;
       
     private void Start()
     {
@@ -32,7 +48,7 @@ public class PlayerBattleController : MonoBehaviour
         inputMode();
         MeleeAttack();
         WeapneBugCheak();
-        SelectTarget();
+        Get_NearTargetInScanCollider();
         TargetingMode();
     }
 
@@ -50,26 +66,63 @@ public class PlayerBattleController : MonoBehaviour
         tapClick = Input.GetKeyDown(KeyCode.Tab);
 
     }
+    bool attackonce;
 
     private void MeleeAttack()
     {
         if ((curModeValue == 1 || curModeValue == 3) && leftClick)
         {
             anim.F_MeleeAttack();
+           
+            if (attackonce == false)
+            {
+                StartCoroutine(AttackColliderActive());  
+            }
         }
     }
 
+    // 공격레이어 활성화
+    IEnumerator AttackColliderActive()
+    {
+        attackonce = true;
+        yield return new WaitForSeconds(FirstAttackDelayTime);
+
+        attackCollider.enabled = true;
+
+        yield return new WaitForSeconds(AttackActiveDurationTime);
+
+        attackCollider.enabled = false;
+        attackonce = false;
+    }
     
     private int beforeModeNum;
     private void TargetingMode()
     {
-        if(tapClick && curModeValue == 1 ) 
+        if(tapClick && curModeValue == 1  && nearTarget != null) 
         {
-            isTargetingOnOff = true; 
+            isTargetingOnOff = true;
+
+            if (nearTarget.gameObject.activeSelf == false) { return; }
+            
+                selectTarget = nearTarget;
+
+                if (selectTarget.transform.Find("HpBar/Target") != null)
+                {
+                    selectTarget.transform.Find("HpBar/Target").gameObject.SetActive(true);
+                    selectTarget.transform.Find("HpBar/Target").GetComponent<Animator>().SetTrigger("In");
+                }
+            
+           
+                
         }
         else if( tapClick && curModeValue == 3 ) 
         {
-            isTargetingOnOff = false; 
+            isTargetingOnOff = false;
+            if(selectTarget.transform.Find("HpBar/Target") != null)
+            {
+                StartCoroutine(LockOnOff());
+            }
+            selectTarget = null;
         }
 
         
@@ -79,6 +132,7 @@ public class PlayerBattleController : MonoBehaviour
             beforeModeNum = curModeValue;
             playerMoveCon.F_ModeSelect("targeting");
         }
+
         else if(!isTargetingOnOff && tapClick)
         {
             switch (beforeModeNum)
@@ -99,10 +153,38 @@ public class PlayerBattleController : MonoBehaviour
         }
         
     }
-
-    private void SelectTarget()
+    IEnumerator LockOnOff()
     {
-        selectTarget = scanSc.F_GetNearTarget();
+        Animator an = selectTarget.transform.Find("HpBar/Target").GetComponent<Animator>();
+        an.SetTrigger("Out");
+
+        yield return null;
+
+        while (an.GetCurrentAnimatorStateInfo(0).IsName("AimOut") && an.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+        {
+            yield return null;
+        }
+
+        an.gameObject.SetActive(false);
+        
+    }
+
+    private void Get_NearTargetInScanCollider()
+    {
+        nearTarget = scanSc.F_GetNearTarget();
+    }
+
+    public GameObject F_Get_SelectTarget()
+    {
+        if(selectTarget != null)
+        {
+            return selectTarget;
+        }
+        else
+        {
+            return null;
+        }
+        
     }
 
 

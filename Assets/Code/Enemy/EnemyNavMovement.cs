@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,16 +8,18 @@ public class EnemyNavMovement : MonoBehaviour
 {
     public enum EnemyType
     {
-        A,B,C
+        A, B, C
     }
     public EnemyType enemyType;
 
+    EnemyStats stats;
     protected NavMeshAgent nav;
     protected ScanPlayers scanColl;
     protected Animator anim;
     protected Vector3 StartVec;
     [Header("# Enemy Cur Stats")]
 
+    public List<ParticleSystem> enemyAttackPs = new List<ParticleSystem>();
     [SerializeField] protected float comeBackDis;
     [SerializeField] protected bool doReturnStartPos;
     [SerializeField] protected bool waitEnemy;
@@ -24,27 +27,36 @@ public class EnemyNavMovement : MonoBehaviour
     [SerializeField] protected bool doAttack;
     [SerializeField] protected float targetDis;
     bool once1;
+    bool MoveStop;
 
     [SerializeField] protected GameObject Target;
     private void Awake()
     {
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
+        
     }
     private void Start()
     {
         scanColl = GetComponentInChildren<ScanPlayers>();
         StartVec = transform.position;
+        stats = GetComponent<EnemyStats>();
         waitEnemy = true;
     }
     private void Update()
     {
-        TargetOnOff();
-        UpdatingTarget();
-        EnemyMove();
-        ComeBackStartComplete();
-        TargetDis();
-        AnimationCenter();
+        MoveStop = stats.IsDead;
+
+        if (!MoveStop) 
+        {
+            TargetOnOff();
+            UpdatingTarget();
+            EnemyMove();
+            ComeBackStartComplete();
+            TargetDis();
+            AnimationCenter();
+        }
+        
 
     }
 
@@ -107,7 +119,7 @@ public class EnemyNavMovement : MonoBehaviour
         }
     }
 
-  
+
     private void ComeBackStartComplete()
     {
         if (doFollowTarget == false)
@@ -150,13 +162,12 @@ public class EnemyNavMovement : MonoBehaviour
         {
             targetDis = Vector3.Distance(transform.position, Target.transform.position);
         }
-        
+
 
         if (nav.remainingDistance <= nav.stoppingDistance && !once1)
         {
             once1 = true;
             ThinkEnemy();
-            Debug.Log("1");
         }
     }
     private void ThinkEnemy()
@@ -167,17 +178,34 @@ public class EnemyNavMovement : MonoBehaviour
         {
             case 0:
                 StartCoroutine(Taunt());
-                Debug.Log("2");
+                StartCoroutine(AttackPSOn());
                 break;
         }
     }
+    [SerializeField] float PsTyming_1;
+    IEnumerator AttackPSOn()
+    {
+        yield return new WaitForSeconds(PsTyming_1);
 
+
+        enemyAttackPs[0].gameObject.SetActive(true);
+        enemyAttackPs[0].Play();
+
+        while (enemyAttackPs[0].isPlaying)
+        {
+            yield return null;
+        }
+
+        enemyAttackPs[0].Stop();
+        enemyAttackPs[0].gameObject.SetActive(false);
+    }
     IEnumerator Taunt()
     {
         doAttack = true;
         anim.SetBool("Attack", true);
-        
+
         yield return new WaitForSeconds(0.5f);
+
         while (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0.98f)
         {
             yield return null;
@@ -187,10 +215,18 @@ public class EnemyNavMovement : MonoBehaviour
         anim.SetBool("Combat_Idle", true);
 
         yield return new WaitForSeconds(1);
-        
+
         anim.SetBool("Combat_Idle", false);
         doAttack = false;
         once1 = false;
     }
 
+   private void A_GameObjectFalse()
+    {
+        Invoke("off", 2);
+    }
+    private void off()
+    {
+        gameObject.SetActive(false);
+    }
 }

@@ -31,8 +31,27 @@ public class EnemyScanColliderSC : MonoBehaviour
     {
         SetupBoxCollSize();
         UpdatingNearTarget();
+        isAliveCheaker();
     }
 
+    // 죽었으면 리스트에서 제거
+    private void isAliveCheaker()
+    {
+        int count = scanTargets.Count;
+
+        for(int i = 0; i < count; i++)
+        {
+            if (scanTargets[i].gameObject.activeSelf == false)
+            {
+                scanTargets.Remove(scanTargets[i]);
+            }
+            else if (scanTargets[i].GetComponent<EnemyStats>().IsDead == true)
+            {
+                scanTargets.Remove(scanTargets[i]);
+            }
+            
+        }
+    }
     private void SetupBoxCollSize()
     {
         boxSizeVec = new Vector3(boxSizeX, boxSizeY, boxSizeZ);
@@ -87,7 +106,17 @@ public class EnemyScanColliderSC : MonoBehaviour
     {
         if (other.CompareTag("Enemy") && scanTargets.Contains(other.gameObject) == false)
         {
+            if(other.GetComponent<EnemyStats>() != null && other.GetComponent<EnemyStats>().IsDead == true)
+            {
+                return;
+            }
             scanTargets.Add(other.gameObject);
+
+            if(other.GetComponent<EnemyStats>().IsDead == false) // 체력바 On
+            {
+                other.transform.Find("HpBar").gameObject.SetActive(true);
+            }
+            
         }
     }
 
@@ -96,6 +125,7 @@ public class EnemyScanColliderSC : MonoBehaviour
         if (other.CompareTag("Enemy") && scanTargets.Contains(other.gameObject) == true)
         {
             scanTargets.Remove(other.gameObject);
+            other.transform.Find("HpBar").gameObject.SetActive(false);
         }
     }
 }

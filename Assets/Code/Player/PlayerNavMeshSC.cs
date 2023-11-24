@@ -10,6 +10,7 @@ public class PlayerNavMeshSC : MonoBehaviour
     NavMeshAgent nav;
     Animator anim;
     [SerializeField] Camera TownCam;
+    [SerializeField] ParticleSystem clickPointer;
 
     private void Awake()
     {
@@ -29,6 +30,8 @@ public class PlayerNavMeshSC : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && Physics.Raycast(ray, out RaycastHit hit))
         {
             nav.SetDestination(hit.point);
+            clickPointer.transform.position = hit.point + Vector3.up * 0.05f;
+            clickPointer.Play();
         }
     }
 

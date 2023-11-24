@@ -6,9 +6,17 @@ public class AnimationContoller : MonoBehaviour
 {
     Animator anim;
     PlayerMoveController player;
+
+    [Header("#Particle System & AavarterMask")]
+    [Space]
     [SerializeField] List<ParticleSystem> comboAttackPs = new List<ParticleSystem>();
-    [SerializeField] float VerSpeedValue;
-    [SerializeField] float HoriSpeedValue;
+    [SerializeField] List<AvatarMask> avaterList = new List<AvatarMask>();
+    [SerializeField] Animator[] con;
+    [Space]
+    [Header("#Cheking Stats")]
+    [Space]
+    [SerializeField] float verSpeedValue;
+    [SerializeField] float horiSpeedValue;
     [SerializeField] float SprintValue;
     [SerializeField] float parameter_VerticalValue;
     [SerializeField] float parameter_HorizontalValue;
@@ -29,6 +37,7 @@ public class AnimationContoller : MonoBehaviour
 
     private void Update()
     {
+       
         CheakInput();
         MathfValueFuntion();
         ApllyAnimator();
@@ -36,6 +45,7 @@ public class AnimationContoller : MonoBehaviour
         curModeValue = player.F_GetPlayerAttackModeNum();
 
         CheakAttackPahse();
+        UpperAvatarMaskWeightChanger();
     }
 
     bool layerWeightOnce;
@@ -99,10 +109,10 @@ public class AnimationContoller : MonoBehaviour
     }
     private void CheakInput()
     {
-        VerSpeedValue = Input.GetAxis("Vertical") * 0.5f;
+        verSpeedValue = Input.GetAxis("Vertical") * 0.5f;
         _PushVDown = Input.GetButton("Vertical");
 
-        HoriSpeedValue = Input.GetAxis("Horizontal") * 0.5f;
+        horiSpeedValue = Input.GetAxis("Horizontal") * 0.5f;
         _PushHDown = Input.GetButton("Horizontal");
 
         SprintValue = Input.GetAxis("Sprint") * 0.5f;
@@ -110,30 +120,57 @@ public class AnimationContoller : MonoBehaviour
 
         _PushDownSpacebar = Input.GetButtonDown("Jump");
     }
+    [SerializeField] bool isCharacterMove;
+    [SerializeField] float CheakVelocity;
+    bool ononon;
+    private void UpperAvatarMaskWeightChanger()
+    {
+        CheakVelocity = Mathf.Abs(horiSpeedValue) + Mathf.Abs(verSpeedValue);
 
+        if (CheakVelocity > 0)
+       {
+            isCharacterMove = true;
+            ononon = false;
+        }
+        else
+        {
+            isCharacterMove = false;
+           
+        }
+
+        if(isCharacterMove == true && (curModeValue == 1 || curModeValue == 3))
+        {
+            anim.SetLayerWeight(2, 0);
+        }
+        else if(isCharacterMove == false && (curModeValue == 1 || curModeValue == 3) && !ononon)
+        {
+            ononon = true;
+            anim.SetLayerWeight(2, 1);
+        }
+    }
     private void MathfValueFuntion()
     {
 
-        if (_PushLshiftDown && _PushVDown && VerSpeedValue > 0)
+        if (_PushLshiftDown && _PushVDown && verSpeedValue > 0)
         {
-            VerSpeedValue += SprintValue;
+            verSpeedValue += SprintValue;
         }
-        else if (_PushLshiftDown && _PushHDown && VerSpeedValue < 0)
+        else if (_PushLshiftDown && _PushHDown && verSpeedValue < 0)
         {
-            VerSpeedValue -= SprintValue;
-        }
-
-        if (_PushLshiftDown && _PushHDown && HoriSpeedValue > 0)
-        {
-            HoriSpeedValue += SprintValue;
-        }
-        else if (_PushLshiftDown && _PushHDown && HoriSpeedValue < 0)
-        {
-            HoriSpeedValue -= SprintValue;
+            verSpeedValue -= SprintValue;
         }
 
-        parameter_VerticalValue = VerSpeedValue;
-        parameter_HorizontalValue = HoriSpeedValue;
+        if (_PushLshiftDown && _PushHDown && horiSpeedValue > 0)
+        {
+            horiSpeedValue += SprintValue;
+        }
+        else if (_PushLshiftDown && _PushHDown && horiSpeedValue < 0)
+        {
+            horiSpeedValue -= SprintValue;
+        }
+
+        parameter_VerticalValue = verSpeedValue;
+        parameter_HorizontalValue = horiSpeedValue;
 
 
 
@@ -141,9 +178,9 @@ public class AnimationContoller : MonoBehaviour
 
     private void AnimateDodge()
     {
-        if (curModeValue == 1)
+        if (curModeValue != 0)
         {
-            if (_PushLshiftDown && (Mathf.Abs(HoriSpeedValue) > 0.1f || Mathf.Abs(VerSpeedValue) > 0.1f) && !isDodge)
+            if (_PushLshiftDown && (Mathf.Abs(horiSpeedValue) > 0.1f || Mathf.Abs(verSpeedValue) > 0.1f) && !isDodge)
             {
                 isDodge = true;
                 anim.SetTrigger("Dodge");
@@ -194,6 +231,11 @@ public class AnimationContoller : MonoBehaviour
 
         meleeAttackNum++;
 
+        if(CheakVelocity > 0 && meleeAttackNum > 0)
+        {
+            anim.SetLayerWeight(1, 1);
+        }
+        
         if (meleeAttackNum == 1)
         {
             anim.SetInteger("MeleeAttackNum", 1);
@@ -211,6 +253,11 @@ public class AnimationContoller : MonoBehaviour
     [SerializeField] float particle_2_Delay;
     [SerializeField] float Attack1EndTime;
     [SerializeField] float Attack2EndTime;
+    /// <summary>
+    /// 근접공격 파티클 실행
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
     IEnumerator ComboAttackParticle(int value)
     {
         switch (value)
@@ -259,22 +306,30 @@ public class AnimationContoller : MonoBehaviour
                 attack1Once = false;
 
                 break;
+
+            case 3:
+                comboAttackPs[3].gameObject.SetActive(true);
+
+                yield return new WaitForSeconds(particle_2_Delay);
+
+                comboAttackPs[3].Play();
+
+                yield return new WaitForSeconds(Attack2EndTime);
+
+                comboAttackPs[3].Stop();
+                comboAttackPs[3].gameObject.SetActive(false);
+                attack1Once = false;
+
+                break;
         }
 
     }
-    //public void A_NextAttackFuntion()
-    //{
-    //    CheakAttackPahse();
-    //}
-    //public void A_AnimationFuntion()
-    //{
-    //    CheakAttackPahse();
-    //}
+
 
     [SerializeField] float nextAttackTyming;
     private void CheakAttackPahse()
     {
-        if (curModeValue != 1) { return; }
+        if (curModeValue == 0 || curModeValue == 2) { return; }
 
         if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack1") && anim.GetCurrentAnimatorStateInfo(1).normalizedTime > nextAttackTyming)
         {
@@ -301,7 +356,19 @@ public class AnimationContoller : MonoBehaviour
                 ResetMeleeAttackNum();
             }
         }
-        if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack3") && anim.GetCurrentAnimatorStateInfo(1).normalizedTime >= 1f)
+        if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack3") && anim.GetCurrentAnimatorStateInfo(1).normalizedTime > nextAttackTyming)
+        {
+            if (meleeAttackNum >= 4)
+            {
+                anim.SetInteger("MeleeAttackNum", 4);
+                StartCoroutine(ComboAttackParticle(3));
+            }
+            else if ((anim.GetCurrentAnimatorStateInfo(1).IsName("Attack3") && anim.GetCurrentAnimatorStateInfo(1).normalizedTime >= 1f))
+            {
+                ResetMeleeAttackNum();
+            }
+        }
+        if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack4") && anim.GetCurrentAnimatorStateInfo(1).normalizedTime >= 1f)
         {
             ResetMeleeAttackNum();
         }
@@ -309,6 +376,7 @@ public class AnimationContoller : MonoBehaviour
 
     private void ResetMeleeAttackNum()
     {
+        anim.SetLayerWeight(1, 0);
         meleeAttackNum = 0;
         anim.SetInteger("MeleeAttackNum", 0);
     }
@@ -319,7 +387,7 @@ public class AnimationContoller : MonoBehaviour
         anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);
         anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
 
-        if(Physics.Raycast(anim.GetIKPosition(AvatarIKGoal.LeftFoot) + Vector3.up, Vector3.down, out RaycastHit hit, _IkDownDis +1.0f, LayerMask.GetMask("Ground")))
+        if (Physics.Raycast(anim.GetIKPosition(AvatarIKGoal.LeftFoot) + Vector3.up, Vector3.down, out RaycastHit hit, _IkDownDis + 1.0f, LayerMask.GetMask("Ground")))
         {
             Vector3 HitPos = hit.point;
             HitPos.y += _IkDownDis;
