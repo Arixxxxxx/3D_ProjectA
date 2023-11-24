@@ -27,6 +27,7 @@ public class PlayerBattleController : MonoBehaviour
     [SerializeField] float AttackActiveDurationTime;
     [Space]
     [SerializeField] GameObject[] MeleeModeWeapenSet;
+    [SerializeField] GameObject[] RangeWeapenSet;
    
     
     
@@ -191,7 +192,7 @@ public class PlayerBattleController : MonoBehaviour
     /// <summary>
     /// 무기 형상 끄기 / 키기
     /// </summary>
-    /// <param name="value"> 0= 끄기 / 1 = 켜기</param>
+    /// <param name="value"> 밀리 0= 끄기 / 1 = 켜기 / 2 = 원거리 켜기 </param>
     public void F_Set_CurModeWeapon(int value)
     {
         switch (value)
@@ -201,12 +202,37 @@ public class PlayerBattleController : MonoBehaviour
                 {
                     MeleeModeWeapenSet[i].SetActive(false);
                 }
+
+                RangeWeapenSet[0].SetActive(false);
+
                 break;
             case 1:
                 for (int i = 0; i < MeleeModeWeapenSet.Length; i++)
                 {
                     MeleeModeWeapenSet[i].SetActive(true);
                 }
+                RangeWeapenSet[0].SetActive(false);
+
+                break;
+
+            case 2:
+                for (int i = 0; i < MeleeModeWeapenSet.Length; i++)
+                {
+                    MeleeModeWeapenSet[i].SetActive(false);
+                }
+                
+                RangeWeapenSet[0].SetActive(true);
+                
+                break;
+
+            case 3:
+                for (int i = 0; i < MeleeModeWeapenSet.Length; i++)
+                {
+                    MeleeModeWeapenSet[i].SetActive(false);
+                }
+
+                RangeWeapenSet[0].SetActive(false);
+
                 break;
         }
     }

@@ -198,11 +198,11 @@ public class AnimationContoller : MonoBehaviour
            
         }
 
-        if(isCharacterMove == true && (curModeValue == 1 || curModeValue == 3))
+        if(isCharacterMove == true && curModeValue != 0 )
         {
             anim.SetLayerWeight(2, 0);
         }
-        else if(isCharacterMove == false && (curModeValue == 1 || curModeValue == 3) && !ononon)
+        else if(isCharacterMove == false && curModeValue != 0 && !ononon)
         {
             ononon = true;
             anim.SetLayerWeight(2, 1);

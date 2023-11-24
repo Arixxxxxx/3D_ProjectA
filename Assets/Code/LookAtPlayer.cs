@@ -11,11 +11,15 @@ public class LookAtPlayer : MonoBehaviour
     {
         cam = Camera.main;
     }
-
-
+    
+    Vector3 Pos;
     private void Update()
     {
-       transform.LookAt(cam.transform);
+        Pos = cam.transform.eulerAngles;
+        Pos.z = 0;
+        cam.transform.eulerAngles = Pos;
+
+        transform.LookAt(cam.transform);
         //Vector3 dir = target_Player.position - transform.position;
         //transform.rotation = Quaternion.LookRotation(dir);
     }

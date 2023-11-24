@@ -267,12 +267,14 @@ public class PlayerMoveController : MonoBehaviour
             {
                 F_ModeSelect("normal");
                 anim.F_PlayerCurMode(0);
+                playerBattleController.F_Set_CurModeWeapon(0);
             }
             else
 
             {
                 F_ModeSelect("range");
                 anim.F_PlayerCurMode(2);
+                playerBattleController.F_Set_CurModeWeapon(2);
             }
 
         }
