@@ -49,6 +49,12 @@ public class AnimationContoller : MonoBehaviour
     }
 
     bool layerWeightOnce;
+
+    /// <summary>
+    /// animator layer Weight Changer
+    /// </summary>
+    /// <param name="value"> 레이어 번호 1/2</param>
+    /// <param name="_value">true / false</param>
     public void F_Set_LayerWeight(int value, bool _value)
     {
         switch (value)
@@ -56,11 +62,22 @@ public class AnimationContoller : MonoBehaviour
             case 1:
                 if (_value == true && !layerWeightOnce)
                 {
-                    StartCoroutine(AniLayer1_Weight(true));
+                    StartCoroutine(AniLayer_Weight(1,true));
                 }
                 else if (_value == false && !layerWeightOnce)
                 {
-                    StartCoroutine(AniLayer1_Weight(false));
+                    StartCoroutine(AniLayer_Weight(1,false));
+                }
+                break;
+
+            case 2:
+                if (_value == true && !layerWeightOnce)
+                {
+                    StartCoroutine(AniLayer_Weight(2,true));
+                }
+                else if (_value == false && !layerWeightOnce)
+                {
+                    StartCoroutine(AniLayer_Weight(2,false));
                 }
                 break;
         }
@@ -68,40 +85,83 @@ public class AnimationContoller : MonoBehaviour
     }
 
     float weightFloat;
-    IEnumerator AniLayer1_Weight(bool _value)
+    IEnumerator AniLayer_Weight(int int_value, bool _value)
     {
         layerWeightOnce = true;
 
-        switch (_value)
+        switch (int_value)
         {
-            case true:
+            case 1:
 
-                weightFloat = 0;
-
-                while (anim.GetLayerWeight(1) < 1)
+                switch (_value) 
+                
                 {
-                    weightFloat += Time.deltaTime * 3.0f;
-                    anim.SetLayerWeight(1, Mathf.Lerp(0, 1, weightFloat));
-                    yield return null;
+                    case true:
+                        weightFloat = 0;
+
+                        while (anim.GetLayerWeight(1) < 1)
+                        {
+                            weightFloat += Time.deltaTime * 3.0f;
+                            anim.SetLayerWeight(1, Mathf.Lerp(0, 1, weightFloat));
+                            yield return null;
+                        }
+
+                        anim.SetLayerWeight(1, 1);
+                        layerWeightOnce = false;
+                        break;
+
+                    case false:
+
+                        weightFloat = 0;
+
+                        while (anim.GetLayerWeight(1) > 0)
+                        {
+                            weightFloat += Time.deltaTime * 3.0f;
+                            anim.SetLayerWeight(1, Mathf.Lerp(1, 0, weightFloat));
+                            yield return null;
+                        }
+                        anim.SetLayerWeight(1, 0);
+                        layerWeightOnce = false;
+                        break;
                 }
 
-                anim.SetLayerWeight(1, 1);
-                layerWeightOnce = false;
                 break;
 
-            case false:
+                case 2:
+                switch (_value)
 
-                weightFloat = 0;
-
-                while (anim.GetLayerWeight(1) > 0)
                 {
-                    weightFloat += Time.deltaTime * 3.0f;
-                    anim.SetLayerWeight(1, Mathf.Lerp(1, 0, weightFloat));
-                    yield return null;
+                    case true:
+                        weightFloat = 0;
+
+                        while (anim.GetLayerWeight(2) < 1)
+                        {
+                            weightFloat += Time.deltaTime * 3.0f;
+                            anim.SetLayerWeight(2, Mathf.Lerp(0, 1, weightFloat));
+                            yield return null;
+                        }
+
+                        anim.SetLayerWeight(2, 1);
+                        layerWeightOnce = false;
+                        break;
+
+                    case false:
+
+                        weightFloat = 0;
+
+                        while (anim.GetLayerWeight(2) > 0)
+                        {
+                            weightFloat += Time.deltaTime * 3.0f;
+                            anim.SetLayerWeight(2, Mathf.Lerp(1, 0, weightFloat));
+                            yield return null;
+                        }
+                        anim.SetLayerWeight(2, 0);
+                        layerWeightOnce = false;
+                        break;
                 }
-                anim.SetLayerWeight(1, 0);
-                layerWeightOnce = false;
+
                 break;
+
 
         }
 
@@ -146,6 +206,11 @@ public class AnimationContoller : MonoBehaviour
         {
             ononon = true;
             anim.SetLayerWeight(2, 1);
+        }
+         
+        if(curModeValue == 0 && anim.GetLayerWeight(2) != 0)
+        {
+            anim.SetLayerWeight(2, 0);
         }
     }
     private void MathfValueFuntion()
@@ -209,11 +274,19 @@ public class AnimationContoller : MonoBehaviour
             case 0:
                 anim.SetBool("NormalMode", true);
                 anim.SetBool("MeleeMode", false);
+                anim.SetBool("RangeMode", false);
                 break;
 
             case 1:
                 anim.SetBool("MeleeMode", true);
                 anim.SetBool("NormalMode", false);
+                anim.SetBool("RangeMode", false);
+                break;
+
+            case 2:
+                anim.SetBool("MeleeMode", false);
+                anim.SetBool("NormalMode", false);
+                anim.SetBool("RangeMode", true);
                 break;
         }
 

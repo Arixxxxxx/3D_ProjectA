@@ -253,7 +253,7 @@ public class PlayerMoveController : MonoBehaviour
             {
                 F_ModeSelect("melee");
                 anim.F_PlayerCurMode(1);
-                //anim.F_Set_LayerWeight(1, true);
+               
                 playerBattleController.F_Set_CurModeWeapon(1);
             }
 
@@ -266,11 +266,13 @@ public class PlayerMoveController : MonoBehaviour
             if (isRangeMode)
             {
                 F_ModeSelect("normal");
+                anim.F_PlayerCurMode(0);
             }
             else
 
             {
                 F_ModeSelect("range");
+                anim.F_PlayerCurMode(2);
             }
 
         }
@@ -335,7 +337,7 @@ public class PlayerMoveController : MonoBehaviour
                 isMeleeMode = false;
                 isRangeMode = true;
                 isMeleeTargetingMode = false;
-                CameraManager.inst.F_ChangeCam(1);
+                CameraManager.inst.F_ChangeCam(0);
                 break;
         }
 

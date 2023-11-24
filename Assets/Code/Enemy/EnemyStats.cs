@@ -60,7 +60,7 @@ public class EnemyStats : MonoBehaviour
                     CurHP -= DMG;
                 }
 
-                hpBar_anim.SetTrigger("Hit");
+                //hpBar_anim.SetTrigger("Hit");
                 StartCoroutine(HitPsPlay());
 
                 //대미지 폰트 소환
