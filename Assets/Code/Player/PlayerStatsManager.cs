@@ -22,6 +22,8 @@ public class PlayerStatsManager : MonoBehaviour
     [SerializeField] float RangeMinDMG;
     [SerializeField] float RangeMaxDMG;
     [SerializeField] float CriticalChance;
+    public float Criti { get { return CriticalChance; } }
+
     [SerializeField] float Def;
 
 
@@ -30,6 +32,7 @@ public class PlayerStatsManager : MonoBehaviour
         CurHP -= DMG;
     }
 
+    
 
     /// <summary>
     /// 플레이어 대미지 리턴 0 = Melee / 1 Range

@@ -9,6 +9,10 @@ public class AttackCollider : MonoBehaviour
     [SerializeField] float MinDMG;
     [SerializeField] float MaxDMG;
     float[] DMG;
+    float CriticalChance;
+    float CriDice;
+
+    bool once;
 
     PlayerStatsManager playerStatsManager;
 
@@ -21,22 +25,44 @@ public class AttackCollider : MonoBehaviour
         DMG = playerStatsManager.F_GetPlayerDMG(0);
         MinDMG = DMG[0];
         MaxDMG = DMG[1];
+        CriticalChance = playerStatsManager.Criti;
     }
 
     
     private void OnTriggerEnter(Collider other)
     {
-        switch (type)
+        if (once == false)
         {
-            case CharacterType.Player:
-                if (other.gameObject.CompareTag("Enemy"))
-                {
-                    EnemyStats sc = other.GetComponent<EnemyStats>();
-                    sc.F_OnHit(Random.Range(MinDMG, MaxDMG));
-                    Debug.Log("11");
-                }
-                break;
+            once = true;
+
+            switch (type)
+            {
+                case CharacterType.Player:
+
+                    if (other.gameObject.CompareTag("Enemy"))
+                    {
+                        EnemyStats sc = other.GetComponent<EnemyStats>();
+
+                        CriDice = Random.Range(0, 100);
+                        Debug.Log(CriDice);
+                        if (CriDice <= CriticalChance)
+                        {
+                            sc.F_OnHit(Random.Range(MinDMG, MaxDMG), true);
+                        }
+                        else if (CriDice > CriticalChance)
+                        {
+                            sc.F_OnHit(Random.Range(MinDMG, MaxDMG), false);
+                        }
+
+                        CriDice = 0;
+                    }
+                    break;
+            }
+
         }
 
+
+
+        once = false;
     }
 }
