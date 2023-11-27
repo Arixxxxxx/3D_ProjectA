@@ -17,7 +17,7 @@ public class PlayerMoveController : MonoBehaviour
     [SerializeField] private float jumpForce;
     [SerializeField] private float DodgeSpeed;
     [SerializeField] GameObject lockOnEnemy;
-
+    [SerializeField] ParticleSystem[] modeCheangePs;
     private float verticalVelo;
     private float grivity_Value = -9.81f;
     private float originSpeed = 0f;
@@ -41,6 +41,7 @@ public class PlayerMoveController : MonoBehaviour
     [SerializeField] bool isMeleeMode;
     [SerializeField] bool isMeleeTargetingMode;
     [SerializeField] bool isRangeMode;
+    [SerializeField] bool isAimMode;
     [SerializeField] bool camSpinMode;
     [SerializeField] bool camFllowMode = true;
 
@@ -239,7 +240,7 @@ public class PlayerMoveController : MonoBehaviour
     private void ModeChanger()
     {
 
-        if (_1keyDown)
+        if (_1keyDown && GameManager.Inst.NoChangeMode == false)
         {
             if (isMeleeMode)
             {
@@ -261,7 +262,7 @@ public class PlayerMoveController : MonoBehaviour
 
         }
 
-        if (_2keyDown)
+        if (_2keyDown && GameManager.Inst.NoChangeMode == false)
         {
             if (isRangeMode)
             {
@@ -314,6 +315,7 @@ public class PlayerMoveController : MonoBehaviour
                 isMeleeMode = false;
                 isRangeMode = false;
                 isMeleeTargetingMode = false;
+                isAimMode = false;
                 CameraManager.inst.F_ChangeCam(0);
 
                 break;
@@ -323,7 +325,9 @@ public class PlayerMoveController : MonoBehaviour
                 isMeleeMode = true;
                 isRangeMode = false;
                 isMeleeTargetingMode = false;
+                isAimMode = false;
                 CameraManager.inst.F_ChangeCam(0);
+                modeCheangePs[0].Play();
                 break;
 
             case "targeting":
@@ -338,6 +342,18 @@ public class PlayerMoveController : MonoBehaviour
                 isNormalMode = false;
                 isMeleeMode = false;
                 isRangeMode = true;
+                isAimMode = false;
+                isMeleeTargetingMode = false;
+                CameraManager.inst.F_ChangeCam(0);
+                modeCheangePs[1].Play();
+                break;
+
+
+            case "aim":
+                isNormalMode = false;
+                isMeleeMode = false;
+                isRangeMode = false;
+                isAimMode = true;
                 isMeleeTargetingMode = false;
                 CameraManager.inst.F_ChangeCam(0);
                 break;
@@ -347,7 +363,7 @@ public class PlayerMoveController : MonoBehaviour
     /// <summary>
     /// 플레이어 현재 모드 / 외부송출 함수
     /// </summary>
-    /// <returns> 0 = 노말 / 1 = 밀리 / 2= 레인지 / 3타겟팅</returns>
+    /// <returns> 0 = 노말 / 1 = 밀리 / 2= 레인지 / 3타겟팅 // 4에임</returns>
     public int F_GetPlayerAttackModeNum()
     {
         if (isNormalMode)
@@ -365,6 +381,10 @@ public class PlayerMoveController : MonoBehaviour
         else if (isMeleeTargetingMode)
         {
             return 3;
+        }
+        else if (isAimMode)
+        {
+            return 4;
         }
 
         return -1;

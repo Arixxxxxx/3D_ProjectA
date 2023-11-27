@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerStatsManager : MonoBehaviour
 {
+    public static PlayerStatsManager inst;
+
     [Header("# Player Helth & Mp Info")]
     [Space]
     [SerializeField] float CurHP;
@@ -25,7 +27,17 @@ public class PlayerStatsManager : MonoBehaviour
     public float Criti { get { return CriticalChance; } }
 
     [SerializeField] float Def;
-
+    private void Awake()
+    {
+        if(inst == null)
+        {
+            inst = this;
+        }
+        else
+        {
+            Destroy(inst);
+        }
+    }
 
     private void F_SetPlayerHP(float DMG)
     {

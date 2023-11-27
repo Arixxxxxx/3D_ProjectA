@@ -61,5 +61,11 @@ public class GameManager : MonoBehaviour
         return  playerRotStop;
     }
 
+   [SerializeField] bool no;
+    public bool NoChangeMode {  get { return no; } }
+    public void F_ModeChangeNo(bool value)
+    {
+        no = value;
+     }
     
 }

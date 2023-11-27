@@ -173,7 +173,7 @@ public class CameraManager : MonoBehaviour
                 Cams[2].gameObject.SetActive(false);
                 TownCam.gameObject.SetActive(false);
                 break;
-            case 1: // È°½ò¶§ ¿¡ÀÓÄ«¸Þ¶ó
+            case 1: // ÃÑ½ò¶§ 1ÀÎÄª ¿¡ÀÓÄ«¸Þ¶ó
                 Cams[0].gameObject.SetActive(false);
                 Cams[1].gameObject.SetActive(true);
                 Cams[2].gameObject.SetActive(false);
@@ -194,7 +194,7 @@ public class CameraManager : MonoBehaviour
         }
     }
 
-
+    
 
     private void CameraRotStop()
     {
@@ -286,7 +286,26 @@ public class CameraManager : MonoBehaviour
                 Cams[0].LookAt = Player.transform;
                 break;
         }
+    }
+    WaitForSeconds shootInverval = new WaitForSeconds(0.02f);
+    public void F_FireCameraZoonOutIn()
+    {
+        StartCoroutine(Shot());
+    }
+    float zoomDis;
+    IEnumerator Shot()
+    {
+        zoomDis = 1.8f;
+        Cams[1].GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = zoomDis;
 
+        while(zoomDis > 1.5f) 
+        {
+            zoomDis -= 0.01f;
+            Cams[1].GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = zoomDis;
+            yield return shootInverval;
+        }
 
+        zoomDis = 1.5f;
+        Cams[1].GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = zoomDis;
     }
 }

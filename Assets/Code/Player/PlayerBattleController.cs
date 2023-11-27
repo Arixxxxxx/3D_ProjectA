@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerBattleController : MonoBehaviour
 {
@@ -28,14 +30,24 @@ public class PlayerBattleController : MonoBehaviour
     [Space]
     [SerializeField] GameObject[] MeleeModeWeapenSet;
     [SerializeField] GameObject[] RangeWeapenSet;
-   
-    
-    
+    [SerializeField] int bulletEA;
+    [SerializeField] Image CrossHair;
+    [SerializeField] Image[] bulletBublle;
+
+
+
     bool leftClick;
     bool rightClick;
     bool tapClick;
     bool isTargetingOnOff;
-      
+    bool isAttackColliderEnable;
+
+
+    public bool IsAttackColliderEnagle { set { isAttackColliderEnable = value; } }
+
+    bool isAttatking;
+
+
     private void Start()
     {
         playerMoveCon = GetComponent<PlayerMoveController>();
@@ -51,6 +63,10 @@ public class PlayerBattleController : MonoBehaviour
         WeapneBugCheak();
         Get_NearTargetInScanCollider();
         TargetingMode();
+        RangeModeAimModeOnOff();
+        ScrrenUI_BulletEA_Image_Updater();
+        ScrrenUI_BulletEA_Image_ColorA_Updater();
+        GameManager.Inst.F_ModeChangeNo(isAttackColliderEnable);
     }
 
     private void WeapneBugCheak()
@@ -61,9 +77,11 @@ public class PlayerBattleController : MonoBehaviour
         }
     }
 
+
     private void inputMode()
     {
         leftClick = Input.GetMouseButtonDown(0);
+        rightClick = Input.GetMouseButtonDown(1);
         tapClick = Input.GetKeyDown(KeyCode.Tab);
 
     }
@@ -71,21 +89,24 @@ public class PlayerBattleController : MonoBehaviour
 
     private void MeleeAttack()
     {
+        if (anim.MeleeAttackNum >= 4) { return; }
         if ((curModeValue == 1 || curModeValue == 3) && leftClick)
         {
             anim.F_MeleeAttack();
-           
-            if (attackonce == false)
+
+            if (isAttackColliderEnable == false)
             {
-                StartCoroutine(AttackColliderActive());  
+                isAttackColliderEnable = true;
+                StartCoroutine(AttackColliderActive());
             }
         }
     }
 
+
     // 공격레이어 활성화
-    IEnumerator AttackColliderActive()
+    public IEnumerator AttackColliderActive()
     {
-        attackonce = true;
+
         yield return new WaitForSeconds(FirstAttackDelayTime);
 
         attackCollider.enabled = true;
@@ -93,66 +114,198 @@ public class PlayerBattleController : MonoBehaviour
         yield return new WaitForSeconds(AttackActiveDurationTime);
 
         attackCollider.enabled = false;
-        attackonce = false;
+
     }
-    
+
+    private void ScrrenUI_BulletEA_Image_Updater()
+    {
+        if (CrossHair.gameObject.activeSelf == true)
+        {
+            for (int i = 0; i < bulletBublle.Length; i++)
+            {
+                bulletBublle[i].gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < bulletBublle.Length; i++)
+            {
+                bulletBublle[i].gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private void ScrrenUI_BulletEA_Image_ColorA_Updater()
+    {
+        if (CrossHair.gameObject.activeSelf == true)
+        {
+            switch (bulletEA)
+            {
+                case 0:
+                    for (int i = 0; i < bulletBublle.Length; i++)
+                    {
+                        bulletBublle[i].color = new Color(bulletBublle[i].color.r, bulletBublle[i].color.g, bulletBublle[i].color.b, 0.5f);
+                    }
+                    break;
+
+                case 1:
+                    for (int i = 0; i < bulletBublle.Length; i++)
+                    {
+                        if (i < 1)
+                        {
+                            bulletBublle[i].color = new Color(bulletBublle[i].color.r, bulletBublle[i].color.g, bulletBublle[i].color.b, 1f);
+                        }
+                        else
+                        {
+                            bulletBublle[i].color = new Color(bulletBublle[i].color.r, bulletBublle[i].color.g, bulletBublle[i].color.b, 0.5f);
+                        }
+                    }
+                    break;
+                case 2:
+                    for (int i = 0; i < bulletBublle.Length; i++)
+                    {
+                        if (i < 2)
+                        {
+                            bulletBublle[i].color = new Color(bulletBublle[i].color.r, bulletBublle[i].color.g, bulletBublle[i].color.b, 1f);
+                        }
+                        else
+                        {
+                            bulletBublle[i].color = new Color(bulletBublle[i].color.r, bulletBublle[i].color.g, bulletBublle[i].color.b, 0.5f);
+                        }
+                    }
+                    break;
+                case 3:
+                    for (int i = 0; i < bulletBublle.Length; i++)
+                    {
+                        if (i < 3)
+                        {
+                            bulletBublle[i].color = new Color(bulletBublle[i].color.r, bulletBublle[i].color.g, bulletBublle[i].color.b, 1f);
+                        }
+                        else
+                        {
+                            bulletBublle[i].color = new Color(bulletBublle[i].color.r, bulletBublle[i].color.g, bulletBublle[i].color.b, 0.5f);
+                        }
+                    }
+                    break;
+                case 4:
+                    for (int i = 0; i < bulletBublle.Length; i++)
+                    {
+                        if (i < 4)
+                        {
+                            bulletBublle[i].color = new Color(bulletBublle[i].color.r, bulletBublle[i].color.g, bulletBublle[i].color.b, 1f);
+                        }
+                        else
+                        {
+                            bulletBublle[i].color = new Color(bulletBublle[i].color.r, bulletBublle[i].color.g, bulletBublle[i].color.b, 0.5f);
+                        }
+                    }
+                    break;
+                case 5:
+                    for (int i = 0; i < bulletBublle.Length; i++)
+                    {
+                        {
+                            bulletBublle[i].color = new Color(bulletBublle[i].color.r, bulletBublle[i].color.g, bulletBublle[i].color.b, 1f);
+                        }
+                    }
+                    break;
+            }
+        }
+        else
+        {
+
+        }
+    }
+    private void RangeModeAimModeOnOff()
+    {
+        if (rightClick == true && curModeValue == 2)
+        {
+            anim.F_AimModeAnimationOnOFF();
+            playerMoveCon.F_ModeSelect("aim");
+            CameraManager.inst.F_ChangeCam(1);
+            CrossHair.gameObject.SetActive(true);
+
+        }
+        else if (rightClick == true && curModeValue == 4)
+        {
+            F_OffAimMode(0);
+        }
+    }
+
+    public void F_OffAimMode(int value)
+    {
+        switch (value)
+        {
+            case 0:
+                playerMoveCon.F_ModeSelect("range");
+                break;
+
+            case 1:
+                playerMoveCon.F_ModeSelect("melee");
+                break;
+        }
+
+        anim.F_AimModeAnimationOnOFF();
+
+        CameraManager.inst.F_ChangeCam(0);
+        CrossHair.gameObject.SetActive(false);
+    }
     private int beforeModeNum;
     private void TargetingMode()
     {
-        if(tapClick && curModeValue == 1  && nearTarget != null) 
+        if (tapClick && curModeValue == 1 && nearTarget != null)
         {
             isTargetingOnOff = true;
 
             if (nearTarget.gameObject.activeSelf == false) { return; }
-            
-                selectTarget = nearTarget;
 
-                if (selectTarget.transform.Find("HpBar/Target") != null)
-                {
-                    selectTarget.transform.Find("HpBar/Target").gameObject.SetActive(true);
-                    selectTarget.transform.Find("HpBar/Target").GetComponent<Animator>().SetTrigger("In");
-                }
-            
-           
-                
+            selectTarget = nearTarget;
+
+            if (selectTarget.transform.Find("HpBar/Target") != null)
+            {
+                selectTarget.transform.Find("HpBar/Target").gameObject.SetActive(true);
+                selectTarget.transform.Find("HpBar/Target").GetComponent<Animator>().SetTrigger("In");
+            }
+
+
+
         }
-        else if( tapClick && curModeValue == 3 ) 
+        else if (tapClick && curModeValue == 3)
         {
             isTargetingOnOff = false;
-            if(selectTarget.transform.Find("HpBar/Target") != null)
+            if (selectTarget.transform.Find("HpBar/Target") != null)
             {
                 StartCoroutine(LockOnOff());
             }
             selectTarget = null;
         }
 
-        
-        
-        if(isTargetingOnOff && tapClick)
+
+
+        if (isTargetingOnOff && tapClick)
         {
             beforeModeNum = curModeValue;
             playerMoveCon.F_ModeSelect("targeting");
         }
 
-        else if(!isTargetingOnOff && tapClick)
+        else if (!isTargetingOnOff && tapClick)
         {
             switch (beforeModeNum)
             {
                 case 0:
                     playerMoveCon.F_ModeSelect("normal");
                     break;
-                    case 1:
+                case 1:
                     playerMoveCon.F_ModeSelect("melee");
                     break;
-                    case 2:
+                case 2:
                     playerMoveCon.F_ModeSelect("range");
                     break;
-                    
+
             }
 
             beforeModeNum = 0;
         }
-        
+
     }
     IEnumerator LockOnOff()
     {
@@ -167,7 +320,7 @@ public class PlayerBattleController : MonoBehaviour
         }
 
         an.gameObject.SetActive(false);
-        
+
     }
 
     private void Get_NearTargetInScanCollider()
@@ -177,7 +330,7 @@ public class PlayerBattleController : MonoBehaviour
 
     public GameObject F_Get_SelectTarget()
     {
-        if(selectTarget != null)
+        if (selectTarget != null)
         {
             return selectTarget;
         }
@@ -185,7 +338,7 @@ public class PlayerBattleController : MonoBehaviour
         {
             return null;
         }
-        
+
     }
 
 
@@ -220,9 +373,9 @@ public class PlayerBattleController : MonoBehaviour
                 {
                     MeleeModeWeapenSet[i].SetActive(false);
                 }
-                
+
                 RangeWeapenSet[0].SetActive(true);
-                
+
                 break;
 
             case 3:
@@ -236,5 +389,13 @@ public class PlayerBattleController : MonoBehaviour
                 break;
         }
     }
+    public bool isAimOn()
+    {
+        return CrossHair.gameObject.activeSelf;
+    }
 
+    public void F_useBullet()
+    {
+        bulletEA--;
+    }
 }

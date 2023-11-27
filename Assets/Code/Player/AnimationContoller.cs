@@ -5,8 +5,11 @@ using UnityEngine;
 public class AnimationContoller : MonoBehaviour
 {
     Animator anim;
-    PlayerMoveController player;
 
+    PlayerMoveController player;
+    PlayerBattleController battleSc;
+    [SerializeField] GameObject Bullet;
+    [SerializeField] Transform BulletStartPoint;
     [Header("#Particle System & AavarterMask")]
     [Space]
     [SerializeField] List<ParticleSystem> comboAttackPs = new List<ParticleSystem>();
@@ -24,28 +27,38 @@ public class AnimationContoller : MonoBehaviour
     [SerializeField] bool _PushVDown;
     [SerializeField] bool _PushHDown;
     [SerializeField] bool _PushLshiftDown;
+    [SerializeField] bool _Push1KeyDown;
+    [SerializeField] bool isLeftClick;
     [SerializeField] int curModeValue;
     [SerializeField] bool isDodge;
-
+    [SerializeField] Light gunShotLight;
+    [SerializeField] ParticleSystem gunShotPs;
+    bool isAttackStart;
+    [SerializeField] bool aimOn;
+    public bool IsAttackStart {  get { return isAttackStart; } }
     public bool Isdodge { get { return isDodge; } set { isDodge = value; } }
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
         player = GetComponent<PlayerMoveController>();
+        battleSc = GetComponent<PlayerBattleController>();
     }
 
     private void Update()
     {
        
         CheakInput();
+        AimOnAnimation();
         MathfValueFuntion();
         ApllyAnimator();
         AnimateDodge();
         curModeValue = player.F_GetPlayerAttackModeNum();
+        aimOn = battleSc.isAimOn();
 
         CheakAttackPahse();
         UpperAvatarMaskWeightChanger();
+
     }
 
     bool layerWeightOnce;
@@ -167,8 +180,16 @@ public class AnimationContoller : MonoBehaviour
 
 
     }
+    
+    
+
+    [SerializeField] float inputMouseVertical;
+    [SerializeField] float mouseVerticalSensevity;
+    float _animVerfloat;
     private void CheakInput()
     {
+        _Push1KeyDown = Input.GetKeyDown(KeyCode.Alpha1);
+
         verSpeedValue = Input.GetAxis("Vertical") * 0.5f;
         _PushVDown = Input.GetButton("Vertical");
 
@@ -179,6 +200,14 @@ public class AnimationContoller : MonoBehaviour
         _PushLshiftDown = Input.GetButton("Sprint");
 
         _PushDownSpacebar = Input.GetButtonDown("Jump");
+        isLeftClick = Input.GetMouseButtonDown(0);
+
+        //inputMouseVertical += Input.GetAxis("Mouse Y") * Time.deltaTime * mouseVerticalSensevity
+
+        inputMouseVertical = Camera.main.transform.rotation.x;
+        inputMouseVertical *= -1.5f;
+        //inputMouseVertical = Mathf.Clamp(inputMouseVertical, -0.5f, 0.5f);
+
     }
     [SerializeField] bool isCharacterMove;
     [SerializeField] float CheakVelocity;
@@ -213,6 +242,61 @@ public class AnimationContoller : MonoBehaviour
             anim.SetLayerWeight(2, 0);
         }
     }
+
+    bool inputMouseVerInit;
+    private void AimOnAnimation()
+    {
+        if(aimOn == true && curModeValue == 1 && anim.GetBool("AimMode") == true)
+        {
+            battleSc.F_OffAimMode(1);
+        }
+
+        if (aimOn == false && anim.GetLayerWeight(1) != 0 && curModeValue == 2)
+        {
+            anim.SetLayerWeight(1, 0);
+        }
+        else if(aimOn == true)
+        {
+            if (anim.GetLayerWeight(1) != 1)
+            {
+                anim.SetLayerWeight(1, 1);
+            }
+            anim.SetFloat("InputMouseVertical", inputMouseVertical);
+            
+            if (isLeftClick)
+            {
+
+                anim.SetTrigger("Shoot");
+                CameraManager.inst.F_FireCameraZoonOutIn();
+                StartCoroutine(ShotLightON());
+                gunShotPs.Play();
+                battleSc.F_useBullet();
+               GameObject bullet_obj = Instantiate(Bullet, BulletStartPoint.position,transform.rotation , transform);
+
+                bullet_obj.GetComponent<Rigidbody>().AddForce(transform.forward * 2, ForceMode.Impulse);
+               
+
+
+            }
+        }
+    }
+    float shotLightIntensityValue;
+    WaitForSeconds LightIntervalTime = new WaitForSeconds(0.3f);
+    IEnumerator ShotLightON()
+    {
+        shotLightIntensityValue = 0;
+
+        while(shotLightIntensityValue <= 10)
+        {
+            shotLightIntensityValue += Time.deltaTime * 20;
+
+            gunShotLight.intensity = shotLightIntensityValue;
+
+            yield return null;
+        }
+        gunShotLight.intensity = 0;
+    }
+
     private void MathfValueFuntion()
     {
 
@@ -292,6 +376,7 @@ public class AnimationContoller : MonoBehaviour
 
     }
     [SerializeField] int meleeAttackNum;
+    public int MeleeAttackNum { get { return meleeAttackNum; } }
     [SerializeField, Range(0f, 3f)] float meleeAttackResetTime;
     [SerializeField] float maxComboDelay;
 
@@ -300,8 +385,11 @@ public class AnimationContoller : MonoBehaviour
     bool attack1Once;
     public void F_MeleeAttack()
     {
-        if (isDodge) { return; }
+        
 
+        if (isDodge) { return; }
+        
+        
         meleeAttackNum++;
 
         if(CheakVelocity > 0 && meleeAttackNum > 0)
@@ -410,6 +498,8 @@ public class AnimationContoller : MonoBehaviour
             {
                 anim.SetInteger("MeleeAttackNum", 2);
                 StartCoroutine(ComboAttackParticle(1));
+                StartCoroutine(battleSc.AttackColliderActive());
+           
             }
             else if ((anim.GetCurrentAnimatorStateInfo(1).IsName("Attack1") && anim.GetCurrentAnimatorStateInfo(1).normalizedTime >= 1f))
             {
@@ -423,6 +513,7 @@ public class AnimationContoller : MonoBehaviour
             {
                 anim.SetInteger("MeleeAttackNum", 3);
                 StartCoroutine(ComboAttackParticle(2));
+                StartCoroutine(battleSc.AttackColliderActive());
             }
             else if ((anim.GetCurrentAnimatorStateInfo(1).IsName("Attack2") && anim.GetCurrentAnimatorStateInfo(1).normalizedTime >= 1f))
             {
@@ -435,6 +526,7 @@ public class AnimationContoller : MonoBehaviour
             {
                 anim.SetInteger("MeleeAttackNum", 4);
                 StartCoroutine(ComboAttackParticle(3));
+                StartCoroutine(battleSc.AttackColliderActive());
             }
             else if ((anim.GetCurrentAnimatorStateInfo(1).IsName("Attack3") && anim.GetCurrentAnimatorStateInfo(1).normalizedTime >= 1f))
             {
@@ -452,7 +544,18 @@ public class AnimationContoller : MonoBehaviour
         anim.SetLayerWeight(1, 0);
         meleeAttackNum = 0;
         anim.SetInteger("MeleeAttackNum", 0);
+        battleSc.IsAttackColliderEnagle = false;
+        
     }
+
+    bool doAimModeOnOff = false;
+    public void F_AimModeAnimationOnOFF()
+    {
+        doAimModeOnOff = !doAimModeOnOff;
+        anim.SetBool("AimMode", doAimModeOnOff);
+    }
+
+
 
     [SerializeField] float _IkDownDis;
     private void OnAnimatorIK(int layerIndex)
@@ -473,5 +576,23 @@ public class AnimationContoller : MonoBehaviour
             HitPosR.y += _IkDownDis;
             anim.SetIKPosition(AvatarIKGoal.RightFoot, HitPosR);
         }
+
+        //if (aimOn == true)
+        //{
+        //    anim.SetLookAtWeight(1.0f);
+
+        //    화면 중앙을 메인 카메라의 월드 좌표로 변환
+        //   Vector3 screenCenter = Camera.main.transform.position;
+        //    screenCenter.y *= -1;
+        //    screenCenter.z *= -1;
+
+        //    anim.SetLookAtPosition(screenCenter);
+        //}
+        //else
+        //{
+        //    anim.SetLookAtWeight(0f);
+        //}
     }
+
+
 }

@@ -46,9 +46,7 @@ public class EnemyStats : MonoBehaviour
         if(!isHit && !isDead)
         {
             isHit = true;
-
-            Debug.Log(isCri);
-
+            
             if (CurHP > 0)
             {
                 if(isCri == true) // е╘╦╝емаЭ
