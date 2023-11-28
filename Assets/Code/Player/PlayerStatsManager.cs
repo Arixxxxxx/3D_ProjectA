@@ -39,6 +39,12 @@ public class PlayerStatsManager : MonoBehaviour
         }
     }
 
+
+    private void Start()
+    {
+        
+    }
+
     private void F_SetPlayerHP(float DMG)
     {
         CurHP -= DMG;

@@ -26,16 +26,16 @@ public class Water : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Cheaker"))
         {
-            Player = other.gameObject;
+            Player = other.transform.parent.gameObject;
             SwimOnOff();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Cheaker"))
         {
             Player = null;
             SwimOnOff();

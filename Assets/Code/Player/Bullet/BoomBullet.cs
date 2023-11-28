@@ -41,7 +41,6 @@ public class BoomBullet : MonoBehaviour
         {
             yield return null;
         }
-
         coll.enabled = false;
     }
     //딜레이 대미지

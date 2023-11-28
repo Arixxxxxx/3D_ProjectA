@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class PlayerMoveController : MonoBehaviour
 {
+    public static PlayerMoveController Inst;
+
     #region [초기화 변수들]
     [Header("# Player Move Value Setting")]
     [Space]
@@ -32,7 +34,8 @@ public class PlayerMoveController : MonoBehaviour
     private Vector3 slopeVec;
     private Camera mainCam;
 
-    bool doJump;
+    [SerializeField] bool SpaceBarKeyDown;
+    [SerializeField] bool XkeyDown;
     bool doRun;
     bool isRun;
     bool isSlope;
@@ -71,6 +74,15 @@ public class PlayerMoveController : MonoBehaviour
     {
         anim = GetComponent<AnimationContoller>();
         playerBattleController = GetComponent<PlayerBattleController>();
+
+        if(Inst == null)
+        {
+            Inst = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
     }
     void Start()
     {
@@ -82,7 +94,7 @@ public class PlayerMoveController : MonoBehaviour
 
     void Update()
     {
-        CheakGround();
+      
         InputFuntion();
 
         if (GM.F_GetMouseScrrenRotationStop() == false)
@@ -92,15 +104,15 @@ public class PlayerMoveController : MonoBehaviour
 
         ModeChanger();
         CharRunSpeedAdd(doRun);
-        DontSlopeMountine();
+        
 
-
-
-        Char_SlopeMove();
 
         if (isInWater == false)
         {
+            CheakGround();
+            Char_SlopeMove();
             Character_Ground_Action();
+            DontSlopeMountine();
         }
         else if (isInWater == true)
         {
@@ -120,6 +132,7 @@ public class PlayerMoveController : MonoBehaviour
     {
         //isGround = Physics.SphereCast(transform.position, cheakGroundRadios,
         isGround = Physics.Raycast(transform.position + new Vector3(0, 0.2f, 0), Vector3.down, cheakGroundDis, GroundLayer);
+
         if (!isGround && isInWater == false)
         {
             verticalVelo += grivity_Value * Time.deltaTime;
@@ -128,53 +141,59 @@ public class PlayerMoveController : MonoBehaviour
         {
             verticalVelo = 0;
         }
-        if (doJump && isGround && IsAttacking == false && isInWater == false)
+        if (SpaceBarKeyDown && isGround && IsAttacking == false && isInWater == false)
         {
             verticalVelo = jumpForce;
 
         }
+        charMoveVec.y = verticalVelo;
     } // 바닥체크
 
     Vector3 aroundVec;
     private void Character_Ground_Action()
     {
+        if (isInWater == true) { return; }
+
         if (charMoveVec.z < 0)
         {
             charMoveVec *= 0.5f; // 뒤로이동시 이동속도 50% 감소
         }
 
-        cCon.Move(transform.TransformDirection(charMoveVec) * fowardMoveSpeed * Time.deltaTime);
-        transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
+    
 
-        //if (isMeleeTargetingMode == true && lockOnEnemy != null)
-        //{
-        //    transform.LookAt(lockOnEnemy.transform.position);
-        //}
+        if (isMeleeTargetingMode == true && lockOnEnemy != null)
+        {
+            transform.LookAt(lockOnEnemy.transform.position);
+        }
 
-        //if (isMeleeTargetingMode == true && lockOnEnemy != null && lockOnEnemy.gameObject.activeSelf == false)
-        //{
-        //    lockOnEnemy = null;
-        //    F_ModeSelect("melee");
-        //}
+        if (isMeleeTargetingMode == true && lockOnEnemy != null && lockOnEnemy.gameObject.activeSelf == false)
+        {
+            lockOnEnemy = null;
+            F_ModeSelect("melee");
+        }
 
-        //if (!anim.Isdodge)
-        //{
-        //    if (DodgeVecOnce) { DodgeVecOnce = false; }
+        if (!anim.Isdodge)
+        {
+            if (DodgeVecOnce) { DodgeVecOnce = false; }
+            cCon.Move(transform.TransformDirection(charMoveVec) * fowardMoveSpeed * Time.deltaTime);
+            transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
 
-          
-        //}
-        //else if (anim.Isdodge)
-        //{
-        //    if (!DodgeVecOnce)
-        //    {
-        //        DodgeVecOnce = true;
-        //        DodgeVec = charMoveVec;
-        //    }
-        //    DodgeVec = Vector3.Lerp(DodgeVec, Vector3.zero, Time.deltaTime);
-        //    cCon.Move(transform.TransformDirection(DodgeVec) * DodgeSpeed * Time.deltaTime);
-        //    transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
-        //}
+        }
+        else if (anim.Isdodge)
+        {
+            if (!DodgeVecOnce)
+            {
+                DodgeVecOnce = true;
+                DodgeVec = charMoveVec;
+            }
+            DodgeVec = Vector3.Lerp(DodgeVec, Vector3.zero, Time.deltaTime);
+            cCon.Move(transform.TransformDirection(DodgeVec) * DodgeSpeed * Time.deltaTime);
+            transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
+        }
     } // 바닥지역
+
+
+    float swimVerticalY;
     private void Character_Swim_Action()
     {
         if(isInWater == true)
@@ -184,35 +203,27 @@ public class PlayerMoveController : MonoBehaviour
                 charMoveVec *= 0.5f; // 뒤로이동시 이동속도 50% 감소
             }
 
-            if (isMeleeTargetingMode == true && lockOnEnemy != null)
-            {
-                transform.LookAt(lockOnEnemy.transform.position);
-            }
+            swimVerticalY = Input.GetAxis("SwimSpace");
+            swimVerticalY -= Input.GetAxis("SwimX");
+            //if (XkeyDown)
+            //{
+            //    swimVerticalY -= SwimSpeed * Time.deltaTime;
+            //}
 
-            if (isMeleeTargetingMode == true && lockOnEnemy != null && lockOnEnemy.gameObject.activeSelf == false)
-            {
-                lockOnEnemy = null;
-                F_ModeSelect("melee");
-            }
+            //if (SpaceBarKeyDown)
+            //{
+            //    swimVerticalY += SwimSpeed * Time.deltaTime;
+            //}
+            //else
+            //{
+            //    swimVerticalY = 0;
+            //}
 
-            if (!anim.Isdodge)
-            {
-                if (DodgeVecOnce) { DodgeVecOnce = false; }
+            charMoveVec.y = swimVerticalY;
 
-                cCon.Move(transform.TransformDirection(charMoveVec) * SwimSpeed * Time.deltaTime);
-                transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
-            }
-            else if (anim.Isdodge)
-            {
-                if (!DodgeVecOnce)
-                {
-                    DodgeVecOnce = true;
-                    DodgeVec = charMoveVec;
-                }
-                DodgeVec = Vector3.Lerp(DodgeVec, Vector3.zero, Time.deltaTime);
-                cCon.Move(transform.TransformDirection(DodgeVec) * DodgeSpeed * Time.deltaTime);
-                transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
-            }
+            cCon.Move(transform.TransformDirection(charMoveVec) * SwimSpeed * Time.deltaTime);
+            transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
+     
         }
     }
     private void Char_SlopeMove() // 슬로프
@@ -234,7 +245,7 @@ public class PlayerMoveController : MonoBehaviour
 
         charMoveVec = charMoveVec.normalized;
 
-        charMoveVec.y = verticalVelo;
+        
 
 
         doRun = Input.GetKey(KeyCode.LeftShift);
@@ -243,8 +254,15 @@ public class PlayerMoveController : MonoBehaviour
         //if (Input.GetKeyUp(KeyCode.LeftShift))  {  isRun = false; }
 
 
-        doJump = Input.GetKeyDown(KeyCode.Space);
-
+        SpaceBarKeyDown = Input.GetKeyDown(KeyCode.Space);
+        
+        if (isInWater)
+        {
+            //SpaceBarKeyDown = Input.GetKey(KeyCode.Space);
+            //XkeyDown = Input.GetKeyDown(KeyCode.X);
+            //XkeyDown = Input.GetKey(KeyCode.X);
+        }
+        
 
     }//입력신호
 

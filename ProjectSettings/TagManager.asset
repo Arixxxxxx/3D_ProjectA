@@ -10,6 +10,7 @@ TagManager:
   - Item
   - Door
   - Water
+  - Cheaker
   layers:
   - Default
   - TransparentFX

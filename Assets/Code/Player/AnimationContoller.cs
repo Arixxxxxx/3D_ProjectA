@@ -375,7 +375,7 @@ public class AnimationContoller : MonoBehaviour
         anim.SetFloat("Horizontal", parameter_HorizontalValue);
         anim.SetFloat("Vertical", parameter_VerticalValue);
 
-        if (_PushDownSpacebar && player.IsGround == true) { anim.SetTrigger("Jump"); }
+        if (_PushDownSpacebar && player.IsGround == true && isInWater == false) { anim.SetTrigger("Jump"); }
     }
 
     public void F_PlayerCurMode(int value)
