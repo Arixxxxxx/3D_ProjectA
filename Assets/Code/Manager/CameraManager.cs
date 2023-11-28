@@ -55,8 +55,8 @@ public class CameraManager : MonoBehaviour
     private void MainCamGroundCheker()
     {
         isGround = Physics.Raycast(mainCam.transform.position, Vector3.down, out RaycastHit hit, rayDis, LayerMask.GetMask("Ground"));
-        
-        if(isGround == true)
+
+        if (isGround == true)
         {
             if (!once)
             {
@@ -70,7 +70,7 @@ public class CameraManager : MonoBehaviour
             // 카메라 VerValue값 가져와서 변경해줘야할듯
             //Debug.Log("11"); anim.SetLayerWeight(1, 1);
         }
-        else if(isGround == false)
+        else if (isGround == false)
         {
             once = false;
             PosY = 0;
@@ -194,7 +194,7 @@ public class CameraManager : MonoBehaviour
         }
     }
 
-    
+
 
     private void CameraRotStop()
     {
@@ -288,24 +288,108 @@ public class CameraManager : MonoBehaviour
         }
     }
     WaitForSeconds shootInverval = new WaitForSeconds(0.02f);
+    WaitForSeconds meleeInverval = new WaitForSeconds(0.01f);
+    bool isCorotineEnd;
+    /// <summary>
+    /// 카메라 줌인아웃 액션
+    /// </summary>
+    /// <param name="value">0=3인칭/1=에임/3=타겟팅</param>
     public void F_FireCameraZoonOutIn()
     {
-        StartCoroutine(Shot());
+        if(isCorotineEnd == false)
+        {
+            isCorotineEnd = true;
+            StartCoroutine(Shot());
+        }
+        
     }
     float zoomDis;
+    float originCamDis;
+    int selectModeNum;
     IEnumerator Shot()
     {
-        zoomDis = 1.8f;
-        Cams[1].GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = zoomDis;
+        selectModeNum  = 0; 
 
-        while(zoomDis > 1.5f) 
+        switch (curCamNum) // 3인칭 카메라가 3번이여서 이 과정을 추가함.
         {
-            zoomDis -= 0.01f;
-            Cams[1].GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = zoomDis;
-            yield return shootInverval;
+            case 0:
+                selectModeNum = 0;
+                break;
+
+            case 1:
+                selectModeNum = 1;
+                break;
+
+            case 3:
+                selectModeNum = 2;
+                break;
         }
 
-        zoomDis = 1.5f;
-        Cams[1].GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = zoomDis;
+        originCamDis = Cams[selectModeNum].GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance;
+
+        switch (selectModeNum)
+        {
+            case 0:
+                zoomDis = originCamDis + 1.5f;
+                break;
+
+            case 1:
+                zoomDis = originCamDis + 0.8f;
+                break;
+
+            case 2:
+                zoomDis = originCamDis + 0.5f;
+                break;
+        }
+
+
+        Cams[selectModeNum].GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = zoomDis;
+
+        while (zoomDis > originCamDis)
+        {
+            switch (selectModeNum)
+            {
+                case 0:
+                    zoomDis -= 0.1f;
+                    break;
+
+                case 1:
+                    zoomDis -= 0.02f;
+                    break;
+
+                case 2:
+                    zoomDis -= 0.02f;
+                    break;
+            }
+           
+            Cams[selectModeNum].GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = zoomDis;
+       
+            switch (selectModeNum)
+            {
+                case 0:
+                    yield return meleeInverval;
+                    break;
+
+                case 1:
+                    yield return shootInverval;
+                    break;
+
+                case 2:
+                    yield return shootInverval;
+                    break;
+            }
+      
+        }
+
+        Cams[selectModeNum].GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = originCamDis;
+
+        zoomDis = 0;
+        originCamDis = 0;
+        isCorotineEnd = false;
+    }
+
+    public float F_1rd_Cam_VerticalValue()
+    {
+        return Cams[1].GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value;
     }
 }

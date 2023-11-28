@@ -31,12 +31,20 @@ public class AnimationContoller : MonoBehaviour
     [SerializeField] bool isLeftClick;
     [SerializeField] int curModeValue;
     [SerializeField] bool isDodge;
+    [Header("#Shooting Effect")]
+    [Space]
     [SerializeField] Light gunShotLight;
-    [SerializeField] ParticleSystem gunShotPs;
+    [SerializeField] ParticleSystem[] gunShotPs;
+    [Header("#Shooting Stats")]
+    [Space]
+    [SerializeField] float shotRayDistance;
+    [SerializeField] float shotPower;
     bool isAttackStart;
     [SerializeField] bool aimOn;
+    bool isInWater;
     public bool IsAttackStart {  get { return isAttackStart; } }
     public bool Isdodge { get { return isDodge; } set { isDodge = value; } }
+    Camera mainCam;
 
     private void Awake()
     {
@@ -44,7 +52,10 @@ public class AnimationContoller : MonoBehaviour
         player = GetComponent<PlayerMoveController>();
         battleSc = GetComponent<PlayerBattleController>();
     }
-
+    private void Start()
+    {
+        mainCam = Camera.main;
+    }
     private void Update()
     {
        
@@ -54,11 +65,12 @@ public class AnimationContoller : MonoBehaviour
         ApllyAnimator();
         AnimateDodge();
         curModeValue = player.F_GetPlayerAttackModeNum();
+        isInWater = player.IsinWater;
         aimOn = battleSc.isAimOn();
 
         CheakAttackPahse();
         UpperAvatarMaskWeightChanger();
-
+        Swim_AnimationConllor();
     }
 
     bool layerWeightOnce;
@@ -185,9 +197,11 @@ public class AnimationContoller : MonoBehaviour
 
     [SerializeField] float inputMouseVertical;
     [SerializeField] float mouseVerticalSensevity;
+    float aaaa;
     float _animVerfloat;
     private void CheakInput()
     {
+        
         _Push1KeyDown = Input.GetKeyDown(KeyCode.Alpha1);
 
         verSpeedValue = Input.GetAxis("Vertical") * 0.5f;
@@ -204,8 +218,8 @@ public class AnimationContoller : MonoBehaviour
 
         //inputMouseVertical += Input.GetAxis("Mouse Y") * Time.deltaTime * mouseVerticalSensevity
 
-        inputMouseVertical = Camera.main.transform.rotation.x;
-        inputMouseVertical *= -1.5f;
+        inputMouseVertical = CameraManager.inst.F_1rd_Cam_VerticalValue();
+        inputMouseVertical *= -0.01f;
         //inputMouseVertical = Mathf.Clamp(inputMouseVertical, -0.5f, 0.5f);
 
     }
@@ -244,6 +258,7 @@ public class AnimationContoller : MonoBehaviour
     }
 
     bool inputMouseVerInit;
+    bool isboomAttackDleay;
     private void AimOnAnimation()
     {
         if(aimOn == true && curModeValue == 1 && anim.GetBool("AimMode") == true)
@@ -255,31 +270,42 @@ public class AnimationContoller : MonoBehaviour
         {
             anim.SetLayerWeight(1, 0);
         }
-        else if(aimOn == true)
+        if(aimOn == true)
         {
-            if (anim.GetLayerWeight(1) != 1)
+            if (anim.GetLayerWeight(1) != 1 && CheakVelocity > 0)
             {
                 anim.SetLayerWeight(1, 1);
             }
-            anim.SetFloat("InputMouseVertical", inputMouseVertical);
-            
-            if (isLeftClick)
+            else if (anim.GetLayerWeight(1) != 0 && CheakVelocity == 0)
             {
+                anim.SetLayerWeight(1, 0);
+            }
+                anim.SetFloat("InputMouseVertical", inputMouseVertical);
+            
+            if (isLeftClick && Physics.Raycast(mainCam.transform.position, mainCam.transform.forward,out RaycastHit hit, shotRayDistance) && !isboomAttackDleay)
+            {
+                isboomAttackDleay = true;
 
                 anim.SetTrigger("Shoot");
                 CameraManager.inst.F_FireCameraZoonOutIn();
                 StartCoroutine(ShotLightON());
-                gunShotPs.Play();
+                gunShotPs[0].Play();
+                gunShotPs[1].Play();
                 battleSc.F_useBullet();
-               GameObject bullet_obj = Instantiate(Bullet, BulletStartPoint.position,transform.rotation , transform);
 
-                bullet_obj.GetComponent<Rigidbody>().AddForce(transform.forward * 2, ForceMode.Impulse);
-               
+                GameObject bullet_obj = Instantiate(Bullet, BulletStartPoint.position, transform.rotation, PoolManager.Inst.transform) ;
+                bullet_obj.GetComponent<Rigidbody>().AddForce(mainCam.transform.forward * shotPower, ForceMode.Impulse) ;
 
+                Invoke("BoomAttackDleay_False_Funtion", battleSc.RangeBoomAttackDleay);
 
             }
         }
     }
+    private void BoomAttackDleay_False_Funtion()
+    {
+        isboomAttackDleay = false;
+    }
+    
     float shotLightIntensityValue;
     WaitForSeconds LightIntervalTime = new WaitForSeconds(0.3f);
     IEnumerator ShotLightON()
@@ -345,6 +371,7 @@ public class AnimationContoller : MonoBehaviour
 
     private void ApllyAnimator()
     {
+        
         anim.SetFloat("Horizontal", parameter_HorizontalValue);
         anim.SetFloat("Vertical", parameter_VerticalValue);
 
@@ -397,14 +424,15 @@ public class AnimationContoller : MonoBehaviour
             anim.SetLayerWeight(1, 1);
         }
         
-        if (meleeAttackNum == 1)
+        if (meleeAttackNum == 1 && attack1Once == false)
         {
+            attack1Once = true;
             anim.SetInteger("MeleeAttackNum", 1);
-            if (attack1Once == false)
-            {
-                attack1Once = true;
-                StartCoroutine(ComboAttackParticle(0));
-            }
+            StartCoroutine(battleSc.AttackColliderActive());
+            CameraManager.inst.F_FireCameraZoonOutIn();
+            player.IsAttacking = true;
+            StartCoroutine(ComboAttackParticle(0));
+      
 
 
 
@@ -499,7 +527,8 @@ public class AnimationContoller : MonoBehaviour
                 anim.SetInteger("MeleeAttackNum", 2);
                 StartCoroutine(ComboAttackParticle(1));
                 StartCoroutine(battleSc.AttackColliderActive());
-           
+                CameraManager.inst.F_FireCameraZoonOutIn();
+
             }
             else if ((anim.GetCurrentAnimatorStateInfo(1).IsName("Attack1") && anim.GetCurrentAnimatorStateInfo(1).normalizedTime >= 1f))
             {
@@ -514,6 +543,7 @@ public class AnimationContoller : MonoBehaviour
                 anim.SetInteger("MeleeAttackNum", 3);
                 StartCoroutine(ComboAttackParticle(2));
                 StartCoroutine(battleSc.AttackColliderActive());
+                CameraManager.inst.F_FireCameraZoonOutIn();
             }
             else if ((anim.GetCurrentAnimatorStateInfo(1).IsName("Attack2") && anim.GetCurrentAnimatorStateInfo(1).normalizedTime >= 1f))
             {
@@ -527,6 +557,7 @@ public class AnimationContoller : MonoBehaviour
                 anim.SetInteger("MeleeAttackNum", 4);
                 StartCoroutine(ComboAttackParticle(3));
                 StartCoroutine(battleSc.AttackColliderActive());
+                CameraManager.inst.F_FireCameraZoonOutIn();
             }
             else if ((anim.GetCurrentAnimatorStateInfo(1).IsName("Attack3") && anim.GetCurrentAnimatorStateInfo(1).normalizedTime >= 1f))
             {
@@ -545,7 +576,8 @@ public class AnimationContoller : MonoBehaviour
         meleeAttackNum = 0;
         anim.SetInteger("MeleeAttackNum", 0);
         battleSc.IsAttackColliderEnagle = false;
-        
+        player.IsAttacking = false;
+        attack1Once = false;
     }
 
     bool doAimModeOnOff = false;
@@ -577,6 +609,7 @@ public class AnimationContoller : MonoBehaviour
             anim.SetIKPosition(AvatarIKGoal.RightFoot, HitPosR);
         }
 
+       
         //if (aimOn == true)
         //{
         //    anim.SetLookAtWeight(1.0f);
@@ -594,5 +627,16 @@ public class AnimationContoller : MonoBehaviour
         //}
     }
 
+    private void Swim_AnimationConllor()
+    {
+        if(isInWater == true && anim.GetBool("Swim") == false)
+        {
+            anim.SetBool("Swim", isInWater);
+        }
+        else if (isInWater == false && anim.GetBool("Swim") == true)
+        {
+            anim.SetBool("Swim", isInWater);
+        }
+    }
 
 }

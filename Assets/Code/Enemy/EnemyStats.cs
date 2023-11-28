@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyStats : MonoBehaviour
@@ -37,7 +38,7 @@ public class EnemyStats : MonoBehaviour
     {
         DeadHPCehaker();
 
-        hitCount = (int)Mathf.Repeat(hitCount, 3);
+        hitCount = (int)Mathf.Repeat(hitCount, 4);
     }
 
     
@@ -58,8 +59,11 @@ public class EnemyStats : MonoBehaviour
                     CurHP -= DMG;
                 }
 
-                //hpBar_anim.SetTrigger("Hit");
-                StartCoroutine(HitPsPlay());
+                if (hitPs.Length != 0)
+                {
+                    StartCoroutine(HitPsPlay());
+                }
+                
 
                 //대미지 폰트 소환
                 GameObject obj = PoolManager.Inst.F_GetObj(0);
@@ -99,16 +103,20 @@ public class EnemyStats : MonoBehaviour
         return hpSet;
     }
 
+    WaitForSeconds HitPsDelay = new WaitForSeconds(0.25f);
     IEnumerator HitPsPlay()
     {
         hitPs[hitCount].gameObject.SetActive(true);
         hitPs[hitCount].Play();
         int Yebi = hitCount;
         hitCount++;
-        while (hitPs[hitCount].isPlaying)
-        {
-            yield return null;
-        }
+
+        yield return HitPsDelay;
+
+        //while (hitPs[Yebi].isPlaying) // hit4 Ps가 지속시간이 살짝 더 길어서 고정시간으로 바꿈
+        //{
+        //    yield return null;
+        //}
 
         hitPs[Yebi].Stop();
         hitPs[Yebi].gameObject.SetActive(false);

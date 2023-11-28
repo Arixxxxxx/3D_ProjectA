@@ -12,7 +12,10 @@ public class PlayerBattleController : MonoBehaviour
     EnemyScanColliderSC scanSc;
 
 
-
+    [Header("# Attack Dleay Settings")]
+    [Space]
+    [SerializeField] float rangeBoomAttackDleay;
+    public float RangeBoomAttackDleay { get { return rangeBoomAttackDleay; } }
     [Header("# Targeting Stat")]
     [Space]
     [SerializeField] GameObject nearTarget;
@@ -90,15 +93,11 @@ public class PlayerBattleController : MonoBehaviour
     private void MeleeAttack()
     {
         if (anim.MeleeAttackNum >= 4) { return; }
+
         if ((curModeValue == 1 || curModeValue == 3) && leftClick)
         {
+            
             anim.F_MeleeAttack();
-
-            if (isAttackColliderEnable == false)
-            {
-                isAttackColliderEnable = true;
-                StartCoroutine(AttackColliderActive());
-            }
         }
     }
 
@@ -236,7 +235,7 @@ public class PlayerBattleController : MonoBehaviour
         switch (value)
         {
             case 0:
-                playerMoveCon.F_ModeSelect("range");
+                playerMoveCon.F_AimModeOff_NoParticle_Funtion();
                 break;
 
             case 1:

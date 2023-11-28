@@ -16,6 +16,7 @@ public class PlayerMoveController : MonoBehaviour
     [SerializeField] private float RunSpeed;
     [SerializeField] private float jumpForce;
     [SerializeField] private float DodgeSpeed;
+    [SerializeField] private float SwimSpeed;
     [SerializeField] GameObject lockOnEnemy;
     [SerializeField] ParticleSystem[] modeCheangePs;
     private float verticalVelo;
@@ -35,6 +36,9 @@ public class PlayerMoveController : MonoBehaviour
     bool doRun;
     bool isRun;
     bool isSlope;
+    bool isInWater;
+    public bool IsinWater { get { return isInWater; } set { isInWater = value; } }
+
     [SerializeField] bool isGround;
     public bool IsGround { get { return isGround; } }
     [SerializeField] bool isNormalMode;
@@ -44,8 +48,9 @@ public class PlayerMoveController : MonoBehaviour
     [SerializeField] bool isAimMode;
     [SerializeField] bool camSpinMode;
     [SerializeField] bool camFllowMode = true;
-
-      bool _1keyDown, _2keyDown;
+    bool isAttacking;
+    public bool IsAttacking { get { return isAttacking; } set { isAttacking = value; } }
+    bool _1keyDown, _2keyDown;
     bool isDownTown;
 
     [SerializeField] bool mouseRightClick;
@@ -93,7 +98,14 @@ public class PlayerMoveController : MonoBehaviour
 
         Char_SlopeMove();
 
-        Char_Action();
+        if (isInWater == false)
+        {
+            Character_Ground_Action();
+        }
+        else if (isInWater == true)
+        {
+            Character_Swim_Action();
+        }
 
         isDownTown = CameraManager.inst.F_isPlayerDowntown();
         lockOnEnemy = playerBattleController.F_Get_SelectTarget();
@@ -108,7 +120,7 @@ public class PlayerMoveController : MonoBehaviour
     {
         //isGround = Physics.SphereCast(transform.position, cheakGroundRadios,
         isGround = Physics.Raycast(transform.position + new Vector3(0, 0.2f, 0), Vector3.down, cheakGroundDis, GroundLayer);
-        if (!isGround)
+        if (!isGround && isInWater == false)
         {
             verticalVelo += grivity_Value * Time.deltaTime;
         }
@@ -116,51 +128,94 @@ public class PlayerMoveController : MonoBehaviour
         {
             verticalVelo = 0;
         }
-        if (doJump && isGround)
+        if (doJump && isGround && IsAttacking == false && isInWater == false)
         {
             verticalVelo = jumpForce;
+
         }
     } // 바닥체크
 
     Vector3 aroundVec;
-    private void Char_Action()
+    private void Character_Ground_Action()
     {
         if (charMoveVec.z < 0)
         {
             charMoveVec *= 0.5f; // 뒤로이동시 이동속도 50% 감소
         }
 
-        if(isMeleeTargetingMode == true && lockOnEnemy != null)
-        {
-            transform.LookAt(lockOnEnemy.transform.position);
-        }
+        cCon.Move(transform.TransformDirection(charMoveVec) * fowardMoveSpeed * Time.deltaTime);
+        transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
 
-        if(isMeleeTargetingMode == true && lockOnEnemy != null && lockOnEnemy.gameObject.activeSelf == false)
-        {
-            lockOnEnemy = null;
-            F_ModeSelect("melee");
-        }
+        //if (isMeleeTargetingMode == true && lockOnEnemy != null)
+        //{
+        //    transform.LookAt(lockOnEnemy.transform.position);
+        //}
 
-        if (!anim.Isdodge)
-        {
-            if (DodgeVecOnce) { DodgeVecOnce = false; }
+        //if (isMeleeTargetingMode == true && lockOnEnemy != null && lockOnEnemy.gameObject.activeSelf == false)
+        //{
+        //    lockOnEnemy = null;
+        //    F_ModeSelect("melee");
+        //}
 
-            cCon.Move(transform.TransformDirection(charMoveVec) * fowardMoveSpeed * Time.deltaTime);
-            transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
-        }
-        else if (anim.Isdodge)
+        //if (!anim.Isdodge)
+        //{
+        //    if (DodgeVecOnce) { DodgeVecOnce = false; }
+
+          
+        //}
+        //else if (anim.Isdodge)
+        //{
+        //    if (!DodgeVecOnce)
+        //    {
+        //        DodgeVecOnce = true;
+        //        DodgeVec = charMoveVec;
+        //    }
+        //    DodgeVec = Vector3.Lerp(DodgeVec, Vector3.zero, Time.deltaTime);
+        //    cCon.Move(transform.TransformDirection(DodgeVec) * DodgeSpeed * Time.deltaTime);
+        //    transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
+        //}
+    } // 바닥지역
+    private void Character_Swim_Action()
+    {
+        if(isInWater == true)
         {
-            if (!DodgeVecOnce)
+            if (charMoveVec.z < 0)
             {
-                DodgeVecOnce = true;
-                DodgeVec = charMoveVec;
+                charMoveVec *= 0.5f; // 뒤로이동시 이동속도 50% 감소
             }
-            DodgeVec = Vector3.Lerp(DodgeVec, Vector3.zero, Time.deltaTime);
-            cCon.Move(transform.TransformDirection(DodgeVec) * DodgeSpeed * Time.deltaTime);
-            transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
+
+            if (isMeleeTargetingMode == true && lockOnEnemy != null)
+            {
+                transform.LookAt(lockOnEnemy.transform.position);
+            }
+
+            if (isMeleeTargetingMode == true && lockOnEnemy != null && lockOnEnemy.gameObject.activeSelf == false)
+            {
+                lockOnEnemy = null;
+                F_ModeSelect("melee");
+            }
+
+            if (!anim.Isdodge)
+            {
+                if (DodgeVecOnce) { DodgeVecOnce = false; }
+
+                cCon.Move(transform.TransformDirection(charMoveVec) * SwimSpeed * Time.deltaTime);
+                transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
+            }
+            else if (anim.Isdodge)
+            {
+                if (!DodgeVecOnce)
+                {
+                    DodgeVecOnce = true;
+                    DodgeVec = charMoveVec;
+                }
+                DodgeVec = Vector3.Lerp(DodgeVec, Vector3.zero, Time.deltaTime);
+                cCon.Move(transform.TransformDirection(DodgeVec) * DodgeSpeed * Time.deltaTime);
+                transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
+            }
         }
-    } // 이동 함수
-        private void Char_SlopeMove()
+    }
+    private void Char_SlopeMove() // 슬로프
     {
         if (isSlope)
         {
@@ -196,7 +251,7 @@ public class PlayerMoveController : MonoBehaviour
     [SerializeField] float RotY;
     private void PlayerRotation()
     {
-        if (isMeleeTargetingMode) 
+        if (isMeleeTargetingMode)
         {
             return;
             //RotY = transform.eulerAngles.y;
@@ -207,7 +262,7 @@ public class PlayerMoveController : MonoBehaviour
             RotY = Camera.main.transform.eulerAngles.y;
             transform.eulerAngles = new Vector3(0, RotY, 0);
         }
-        
+
     }//플레이어 회전
 
     private void CharRunSpeedAdd(bool value)
@@ -254,7 +309,7 @@ public class PlayerMoveController : MonoBehaviour
             {
                 F_ModeSelect("melee");
                 anim.F_PlayerCurMode(1);
-               
+
                 playerBattleController.F_Set_CurModeWeapon(1);
             }
 
@@ -359,7 +414,7 @@ public class PlayerMoveController : MonoBehaviour
                 break;
         }
 
-    } 
+    }
     /// <summary>
     /// 플레이어 현재 모드 / 외부송출 함수
     /// </summary>
@@ -390,7 +445,19 @@ public class PlayerMoveController : MonoBehaviour
         return -1;
     } // 현재 모드 외부송출
 
+    public void F_AimModeOff_NoParticle_Funtion()
+    {
+        isNormalMode = false;
+        isMeleeMode = false;
+        isRangeMode = true;
+        isAimMode = false;
+        isMeleeTargetingMode = false;
+        CameraManager.inst.F_ChangeCam(0);
+    }
 
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
 
+    }
 
 }

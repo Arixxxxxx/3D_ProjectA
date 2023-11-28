@@ -56,14 +56,14 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 0
+  m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!114 &1837459181059319046
 MonoBehaviour:
@@ -87,7 +87,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &7097145709190052557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,8 +134,8 @@ MonoBehaviour:
   CriticalDmgColor: {r: 0.9622642, g: 0.19517623, b: 0.19517623, a: 1}
   CriticalDmgFontSize: 50
   duration: 2
-  fontMoveSpeed: 2
-  heightVolume: 0.8
+  fontMoveSpeed: 2.5
+  heightVolume: 1
 --- !u!95 &536830364864591034
 Animator:
   serializedVersion: 5
@@ -224,8 +224,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 455
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5125ad6f930a4cb4ea76b8871b983afb, type: 2}
+  m_sharedMaterial: {fileID: -5742506467406215478, guid: 5125ad6f930a4cb4ea76b8871b983afb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

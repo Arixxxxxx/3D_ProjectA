@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     private bool gameStopRequest;
     private bool isCursorOn;
     private bool inHomeTown;
+    
     public bool InHomeTown {  get { return inHomeTown; } set { inHomeTown = value; } }
 
     private void Awake()

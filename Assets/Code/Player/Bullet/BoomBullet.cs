@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class BoomBullet : MonoBehaviour
 {
+
+    [Header("# Boom DMG Setting")]
+    [Space]
     [SerializeField] float MinDMG;
     [SerializeField] float MaxDMG;
+    
+    
     float currentTime;
     float totalDuration;
-    [SerializeField] float playbackRatio;
+    float playbackRatio;
     SphereCollider coll;
     ParticleSystem Ps;
   
@@ -16,7 +21,8 @@ public class BoomBullet : MonoBehaviour
     {
         coll = GetComponent<SphereCollider>();
         Ps  = GetComponent<ParticleSystem>();
-        StartCoroutine(OnColl());
+        //StartCoroutine(OnColl()); // 대미지가 딜레이 영향을 받아야할때
+        StartCoroutine(KeepDMG());
     }
     private void Update()
     {
@@ -27,7 +33,18 @@ public class BoomBullet : MonoBehaviour
             playbackRatio = currentTime / totalDuration;
         }
     }
-  
+   // 즉시대미지
+         IEnumerator KeepDMG()
+    {
+        coll.enabled = true;
+        while (playbackRatio < 0.2f)
+        {
+            yield return null;
+        }
+
+        coll.enabled = false;
+    }
+    //딜레이 대미지
     WaitForSeconds colliderDur = new WaitForSeconds(0.1f);
     IEnumerator OnColl()
     {
@@ -36,13 +53,13 @@ public class BoomBullet : MonoBehaviour
         {
             yield return null;
         }
-            
+        
         coll.enabled = true;
-
         yield return colliderDur;
 
         coll.enabled = false;
     }
+
     float Dice;
     
     private void OnTriggerEnter(Collider other)

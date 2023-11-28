@@ -7,6 +7,9 @@ TagManager:
   - Fire
   - Ground
   - Enemy
+  - Item
+  - Door
+  - Water
   layers:
   - Default
   - TransparentFX

@@ -6,9 +6,13 @@ public class PoolManager : MonoBehaviour
 {
     public static PoolManager Inst;
 
-    [SerializeField] GameObject[] PoolingOBJ;
+    [SerializeField] GameObject[] DmgFont_Obj;
+    [SerializeField] GameObject[] BoomBullet3EA;
+
     Queue<GameObject>[] pool;
+
     [SerializeField] int FontOBJ_EA;
+    [SerializeField] int BoomOBJ_EA;
 
 
     Transform[] PoolParent;
@@ -38,7 +42,7 @@ public class PoolManager : MonoBehaviour
 
     private void Init()
     {
-        int ObjCount = PoolingOBJ.Length;
+        int ObjCount = DmgFont_Obj.Length;
         PoolParent = new Transform[ObjCount];
         PoolParent[0] = transform.Find("ObjPool/DmgFont").transform;
         
@@ -51,7 +55,7 @@ public class PoolManager : MonoBehaviour
 
         for(int i = 0;i < FontOBJ_EA; i++)
         {
-            GameObject obj = Instantiate(PoolingOBJ[0], transform.position, Quaternion.identity, PoolParent[0]);
+            GameObject obj = Instantiate(DmgFont_Obj[0], transform.position, Quaternion.identity, PoolParent[0]);
             pool[0].Enqueue(obj);
             obj.SetActive(false);
         }
@@ -72,7 +76,7 @@ public class PoolManager : MonoBehaviour
           
                 if (pool[0].Count <= 0)
                 {
-                    GameObject obj1 = Instantiate(PoolingOBJ[0], transform.position, Quaternion.identity, PoolParent[0]);
+                    GameObject obj1 = Instantiate(DmgFont_Obj[0], transform.position, Quaternion.identity, PoolParent[0]);
                     pool[0].Enqueue(obj1);
                     obj1.SetActive(false);
 
