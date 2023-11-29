@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Water : MonoBehaviour
 {
+   
+
     [SerializeField] GameObject Player;
     PlayerMoveController MoveSc;
     private void Update()
@@ -11,34 +13,31 @@ public class Water : MonoBehaviour
 
     }
 
-    private void SwimOnOff()
-    {
-        if (Player != null)
-        {
-            MoveSc = Player.GetComponent<PlayerMoveController>();
-            MoveSc.IsinWater = true;
-        }
-        else if(Player == null)
-       {
-            MoveSc.IsinWater = false;
-        }
-    }
+  
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Cheaker"))
-        {
-            Player = other.transform.parent.gameObject;
-            SwimOnOff();
-        }
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Cheaker"))
+    //    {
+    //        Player = other.transform.parent.gameObject;
+    //    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Cheaker"))
-        {
-            Player = null;
-            SwimOnOff();
-        }
-    }
+    //    if (other.gameObject.CompareTag("Cheaker"))
+    //    {
+    //        SwimOnOff();
+    //    }
+    //}
+
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Cheaker") )
+    //    {
+    //        Player = null;
+    //    }
+
+    //    if (other.gameObject.CompareTag("Cheaker"))
+    //    {
+    //        SwimOnOff();
+    //    }
+    //}
 }

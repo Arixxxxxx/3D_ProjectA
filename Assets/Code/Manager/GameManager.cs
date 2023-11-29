@@ -7,8 +7,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Inst;
 
-    private bool playerRotStop;
+    private GameObject water_Obj;
+    public GameObject Water_Obj { get { return water_Obj; } set { water_Obj = value; } }
 
+    private bool playerRotStop;
     private bool rotStopRequest;
     private bool moveStopRequest;
     private bool gameStopRequest;

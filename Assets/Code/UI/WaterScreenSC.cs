@@ -14,19 +14,18 @@ public class WaterScreenSC : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ScreenOnOffSetter();
+        
     }
 
-    private void ScreenOnOffSetter()
+    public void F_ScreenOnOffSetter(bool Value)
     {
-        if(PlayerMoveController.Inst.IsinWater == true && ScreenAnim.GetBool("Water") == false)
+       if(Value == true)
         {
             ScreenAnim.SetBool("Water", true);
         }
-        else if(PlayerMoveController.Inst.IsinWater == false && ScreenAnim.GetBool("Water") == true)
+        else
         {
             ScreenAnim.SetBool("Water", false);
         }
-       
     }
 }
