@@ -6,10 +6,12 @@ using UnityEngine;
 public class WaterCheaker : MonoBehaviour
 {
     
-    public enum CheakerType { Body, Head }
+    public enum CheakerType { Body, Head,Camera }
     public CheakerType type;
-    [SerializeField] WaterScreenSC UiManager_Obj;
-    [SerializeField] GameObject Water_Obj;
+    [SerializeField] WaterScreenSC _UiManager_Obj;
+    [SerializeField] GameObject water_Obj;
+    [SerializeField] Animator waterScrren;
+    [SerializeField] ParticleSystem waterUpPs;
     PlayerMoveController MoveSc;
     GameManager Gm;
     bool isOnce;
@@ -23,7 +25,11 @@ public class WaterCheaker : MonoBehaviour
 
     void Update()
     {
-        WaterScreenOnOff();
+        if(type == CheakerType.Camera)
+        {
+            WaterScreenOnOff();
+        }
+      
     }
 
     private void SwimOnOff()
@@ -35,12 +41,13 @@ public class WaterCheaker : MonoBehaviour
         if (Gm.Water_Obj != null && isOnce == false)
         {
             isOnce = true;
-            UiManager_Obj.F_ScreenOnOffSetter(true);
+            _UiManager_Obj.F_ScreenOnOffSetter(true);
         }
         else if(Gm.Water_Obj == null && isOnce == true)
         {
             isOnce = false;
-            UiManager_Obj.F_ScreenOnOffSetter(false);
+            _UiManager_Obj.F_ScreenOnOffSetter(false);
+            waterScrren.SetTrigger("On");
         }
     } 
 
@@ -53,10 +60,21 @@ public class WaterCheaker : MonoBehaviour
                 if (other.gameObject.CompareTag("Water"))
                 {
                     SwimOnOff();
+                    waterUpPs.Play();
                 }
                 break;
 
             case CheakerType.Head:
+                
+                if (other.gameObject.CompareTag("Water"))
+                {
+                    MoveSc.IsNoUpInWater = true;
+                  
+                }
+             
+                break;
+
+            case CheakerType.Camera:
 
 
                 if (other.gameObject.CompareTag("Water") && Gm.Water_Obj == null)
@@ -81,6 +99,13 @@ public class WaterCheaker : MonoBehaviour
                 break;
 
             case CheakerType.Head:
+                if (other.gameObject.CompareTag("Water"))
+                {
+                    MoveSc.IsNoUpInWater = false;
+                }
+                break;
+
+            case CheakerType.Camera:
 
 
                 if (other.gameObject.CompareTag("Water") && Gm.Water_Obj != null)

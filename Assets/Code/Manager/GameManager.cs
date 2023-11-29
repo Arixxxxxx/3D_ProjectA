@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Inst;
+    [SerializeField] GameObject[] windowCheker;
 
     private GameObject water_Obj;
     public GameObject Water_Obj { get { return water_Obj; } set { water_Obj = value; } }
@@ -16,7 +17,8 @@ public class GameManager : MonoBehaviour
     private bool gameStopRequest;
     private bool isCursorOn;
     private bool inHomeTown;
-    
+    private bool isWindowOpen;
+    public bool IsWindowOpen { get { return isWindowOpen; }}
     public bool InHomeTown {  get { return inHomeTown; } set { inHomeTown = value; } }
 
     private void Awake()
@@ -26,6 +28,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         OnScrrenCursurOnOFF();
+        GameUI_Or_WindowOn_Cheaker();
     }
     private void AwakeSingleTone()
     {
@@ -38,7 +41,18 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
     }
-
+    
+    private void GameUI_Or_WindowOn_Cheaker()
+    {
+        if (windowCheker[0].gameObject.activeSelf == true)
+        {
+            isWindowOpen = true;
+        }
+        else
+        {
+            isWindowOpen = false;
+        }
+    }
     private void OnScrrenCursurOnOFF()
     {
         if (inHomeTown) { Cursor.lockState = CursorLockMode.None; return; }

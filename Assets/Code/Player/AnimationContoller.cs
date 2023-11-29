@@ -8,6 +8,7 @@ public class AnimationContoller : MonoBehaviour
 
     PlayerMoveController player;
     PlayerBattleController battleSc;
+    GameManager Gm;
     [SerializeField] GameObject Bullet;
     [SerializeField] Transform BulletStartPoint;
     [Header("#Particle System & AavarterMask")]
@@ -55,10 +56,11 @@ public class AnimationContoller : MonoBehaviour
     private void Start()
     {
         mainCam = Camera.main;
+        Gm = GameManager.Inst;
     }
     private void Update()
     {
-       
+       if(Gm.IsWindowOpen == true) { return; }
         CheakInput();
         AimOnAnimation();
         MathfValueFuntion();

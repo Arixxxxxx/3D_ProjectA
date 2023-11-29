@@ -2,20 +2,25 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: AN_Water
   m_Shader: {fileID: 4800000, guid: faaeb4a0622f3594095e9e1327bca9e2, type: 3}
-  m_ShaderKeywords: _WAVESNORMALINTENSITY_ON
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _WAVESNORMALINTENSITY_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -65,29 +70,32 @@ Material:
     - _2: 0.7
     - _AlphaCutoff: 0.5
     - _ChromaticAberration: 0
-    - _CoastOpacity: 0.348
+    - _CoastOpacity: 0.497
     - _CoastalWavesDensity: 0.5
     - _DepthDistance: 1.5
     - _DepthFade: 1
     - _DepthIntensity: 0.411
     - _EdgeFoamTile: 4.24
+    - _EnvironmentReflections: 1
     - _Float0: 0.438
     - _Float1: 0
     - _Float2: 0.1
     - _Float3: 0
-    - _FoamContrast: 0.7
-    - _FoamDensity: 0.392
-    - _FoamDistance: 0.35
+    - _FoamContrast: 0.674
+    - _FoamDensity: 0.333
+    - _FoamDistance: 2.24
     - _FoamOpacity: 1
     - _Normal: 0.15
     - _Opacity: 1
     - _Power: 0.2
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _ReceiveShadows: 1
     - _RefractionIntensity: 0.15
-    - _RefractionScale: 0.2
+    - _RefractionScale: 0.393
     - _Scale: 50
-    - _Smoothness: 0.9
+    - _Smoothness: 1
+    - _SpecularHighlights: 1
     - _TransAmbient: 0.2
     - _TransDirect: 1
     - _TransNormalDistortion: 0.1
@@ -96,8 +104,8 @@ Material:
     - _Translucency: 0
     - _UDepthDistance: 0.3
     - _UDistancePower: 0.1
-    - _WavesNormalIntensity: 0.35
-    - _WavesSpeed: 0.1
+    - _WavesNormalIntensity: 0.685
+    - _WavesSpeed: 0.332
     - _WavesTile: 0.15
     - __dirty: 0
     m_Colors:

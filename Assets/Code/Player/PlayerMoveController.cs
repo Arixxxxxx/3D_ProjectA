@@ -8,7 +8,7 @@ using UnityEngine;
 public class PlayerMoveController : MonoBehaviour
 {
     public static PlayerMoveController Inst;
-
+    GameManager Gm;
     #region [초기화 변수들]
     [Header("# Player Move Value Setting")]
     [Space]
@@ -40,6 +40,8 @@ public class PlayerMoveController : MonoBehaviour
     bool isRun;
     bool isSlope;
     bool isInWater;
+    bool isNoUpInWater;
+    public bool IsNoUpInWater { get { return isNoUpInWater; } set { isNoUpInWater = value; } }
     public bool IsinWater { get { return isInWater; } set { isInWater = value; } }
 
     [SerializeField] bool isGround;
@@ -90,11 +92,13 @@ public class PlayerMoveController : MonoBehaviour
         isNormalMode = true;
         GM = GameManager.Inst;
         mainCam = Camera.main;
+       
     }
 
     void Update()
     {
-      
+        if(GM.IsWindowOpen == true) { return; }
+       
         InputFuntion();
 
         if (GM.F_GetMouseScrrenRotationStop() == false)
@@ -203,7 +207,14 @@ public class PlayerMoveController : MonoBehaviour
                 charMoveVec *= 0.5f; // 뒤로이동시 이동속도 50% 감소
             }
 
-            swimVerticalY = Input.GetAxis("SwimSpace");
+            if(isNoUpInWater == true)
+            {
+                swimVerticalY = Input.GetAxis("SwimSpace");
+            }
+            else
+            {
+                swimVerticalY = 0;
+            }
             swimVerticalY -= Input.GetAxis("SwimX");
             //if (XkeyDown)
             //{

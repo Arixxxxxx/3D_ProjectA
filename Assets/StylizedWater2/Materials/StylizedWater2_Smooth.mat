@@ -2,38 +2,23 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 8
+  serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: StylizedWater2_Smooth
-  m_Shader: {fileID: -6465566751694194690, guid: d7b0192b9bf19c949900035fa781fdc4, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _ADVANCED_SHADING
-  - _CAUSTICS
-  - _DISTANCE_NORMALS
-  - _NORMALMAP
-  - _REFRACTION
-  - _SMOOTH_INTERSECTION
-  - _WAVES
-  m_InvalidKeywords:
-  - ADVANCED_LIGHTING
-  - _DEPTHEXP_ON
-  - _DEPTH_TEX
-  - _SIMPLE_LIGHTING
-  - _VERTEXCOLORWAVEFLATTENING_ON
-  - _WORLDSPACEUV_ON
-  - _ZCLIP_ON
+  m_Shader: {fileID: -6465566751694194690, guid: d7b0192b9bf19c949900035fa781fdc4,
+    type: 3}
+  m_ShaderKeywords: ADVANCED_LIGHTING _ADVANCED_SHADING _CAUSTICS _DEPTHEXP_ON _DEPTH_TEX
+    _DISTANCE_NORMALS _NORMALMAP _REFRACTION _SIMPLE_LIGHTING _SMOOTH_INTERSECTION
+    _VERTEXCOLORWAVEFLATTENING_ON _WAVES _WORLDSPACEUV_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: _EdgeFade
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -67,10 +52,6 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _FoamTex:
         m_Texture: {fileID: 2800000, guid: e91f048fea6b6b94eb864b2124843ce9, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _FoamTexDynamic:
-        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _IntersectionNoise:
@@ -125,7 +106,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Ints: []
     m_Floats:
     - Vector1_1942CF3A: 1
     - Vector1_BE75C478: 32
@@ -145,7 +125,7 @@ Material:
     - _CausticsOn: 1
     - _CausticsSpeed: 0.1
     - _CausticsTiling: 0.12000031
-    - _ColorAbsorption: 0.06
+    - _ColorAbsorption: 0
     - _CrossPan_IntersectionOn: 0
     - _Cull: 2
     - _Cutoff: 0.5
@@ -154,10 +134,10 @@ Material:
     - _DepthHorizontal: 1
     - _DepthMode: 0
     - _DepthTexture: 1
-    - _DepthVertical: 4.69
+    - _DepthVertical: 6.79
     - _DisableDepthTexture: 0
     - _DistanceNormalsOn: 1
-    - _DistanceNormalsTiling: -0.49999994
+    - _DistanceNormalsTiling: 0.10000002
     - _DstBlend: 0
     - _EdgeFade: 10
     - _EnvironmentReflections: 1
@@ -171,20 +151,16 @@ Material:
     - _FoamOpacity: 0.686
     - _FoamSize: 0.058
     - _FoamSpeed: -0.059999995
-    - _FoamSpeedDynamic: 0.1
     - _FoamSubSpeed: -0.25
-    - _FoamSubSpeedDynamic: -0.1
     - _FoamSubTiling: 0.5
-    - _FoamSubTilingDynamic: 2
     - _FoamTiling: 0.07930001
-    - _FoamTilingDynamic: 0.1
     - _FoamWaveAmount: 0
     - _FoamWaveMask: 0.663
     - _FoamWaveMaskExp: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HorizonDistance: 20.8
+    - _HorizonDistance: 22.5
     - _IntersectionClipping: 0.175
     - _IntersectionFalloff: 0.5
     - _IntersectionLength: 2
@@ -225,9 +201,9 @@ Material:
     - _ReflectionStrength: 0.31
     - _Reflectivity: 1
     - _RefractionAmount: 0.05
-    - _RefractionChromaticAberration: 0.806
+    - _RefractionChromaticAberration: 1
     - _RefractionOn: 1
-    - _RefractionStrength: 0.593
+    - _RefractionStrength: 0.161
     - _RimRize: 1
     - _RimTiling: 0.025
     - _RiverModeOn: 0
@@ -238,8 +214,6 @@ Material:
     - _ShoreLineWaveDistance: 23
     - _ShoreLineWaveStr: 1
     - _SimpleLighting: 1
-    - _SlopeAngleFalloff: 25
-    - _SlopeAngleThreshold: 15
     - _SlopeFoam: 1
     - _SlopeSpeed: 4
     - _SlopeStretching: 0.5
@@ -266,7 +240,6 @@ Material:
     - _TranslucencyOn: 0
     - _TranslucencyReflectionMask: 0
     - _TranslucencyStrength: 1
-    - _TranslucencyStrengthDirect: 0.05
     - _UnderwaterRefractionOffset: 0.2
     - _UnderwaterSurfaceSmoothness: 0.8
     - _VertexColorDepth: 0
@@ -285,11 +258,11 @@ Material:
     - _ZClip: 1
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 0.254539, g: 0.53218037, b: 0.9811321, a: 1}
+    - _BaseColor: {r: 0, g: 0.3693854, b: 0.96400577, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _DepthMapBounds: {r: -402.3, g: -459.43, b: 0.0012693577, a: 0}
     - _Direction: {r: -1, g: -1, b: 0, a: 0}
-    - _DistanceNormalsFadeDist: {r: 93.74999, g: 141.59512, b: 0, a: 0}
+    - _DistanceNormalsFadeDist: {r: 0, g: 67.37639, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 0.6862745}
     - _HorizonColor: {r: 0.68, g: 1, b: 0.99, a: 0.12156863}
