@@ -6,6 +6,8 @@ public class PlayerStatsManager : MonoBehaviour
 {
     public static PlayerStatsManager inst;
 
+    [SerializeField] Animator Scrren_Blood;
+
     [Header("# Player Helth & Mp Info")]
     [Space]
     [SerializeField] float CurHP;
@@ -25,6 +27,7 @@ public class PlayerStatsManager : MonoBehaviour
     [SerializeField] float RangeMaxDMG;
     [SerializeField] float CriticalChance;
     public float Criti { get { return CriticalChance; } }
+    [SerializeField] bool onHit;
 
     [SerializeField] float Def;
     private void Awake()
@@ -45,8 +48,29 @@ public class PlayerStatsManager : MonoBehaviour
         
     }
 
+    public void F_Player_On_Hit(float DMG)
+    {
+        if(onHit == false && CurHP > 0)
+        {
+            onHit = true;
+            F_SetPlayerHP(DMG);
+
+            if (CurHP <= 0)
+            {
+                //Á×À½
+                return;
+            }
+
+            Scrren_Blood.SetTrigger("Hit");
+
+            onHit = false;
+        }
+        
+    }
+
     private void F_SetPlayerHP(float DMG)
     {
+
         CurHP -= DMG;
     }
 

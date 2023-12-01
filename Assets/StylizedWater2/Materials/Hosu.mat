@@ -259,6 +259,9 @@ Material:
     - _SunReflectionStrength: 10
     - _Surface: 0
     - _TEXTURE_INTERSECTIONOn: 0
+    - _TessMax: 15
+    - _TessMin: 0
+    - _TessValue: 16
     - _Texture_IntersectionOn: 1
     - _Tiling: 0.5
     - _Translucency: 1

@@ -22,10 +22,14 @@ public class AttackCollider : MonoBehaviour
     }
     private void Update()
     {
-        DMG = playerStatsManager.F_GetPlayerDMG(0);
-        MinDMG = DMG[0];
-        MaxDMG = DMG[1];
-        CriticalChance = playerStatsManager.Criti;
+        if(type == CharacterType.Player) 
+        {
+            DMG = playerStatsManager.F_GetPlayerDMG(0);
+            MinDMG = DMG[0];
+            MaxDMG = DMG[1];
+            CriticalChance = playerStatsManager.Criti;
+        }
+       
     }
 
     
@@ -55,6 +59,17 @@ public class AttackCollider : MonoBehaviour
                         }
 
                         CriDice = 0;
+                    }
+                    break;
+
+                case CharacterType.Enemy:
+
+                    if (other.gameObject.CompareTag("Player"))
+                    {
+                        Debug.Log("11");
+                        PlayerStatsManager sc = other.GetComponent<PlayerStatsManager>();
+                        sc.F_Player_On_Hit(Random.Range(MinDMG, MaxDMG));
+                       
                     }
                     break;
             }

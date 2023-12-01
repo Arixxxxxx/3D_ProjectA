@@ -8,7 +8,7 @@ public class EnemyNavMovement : MonoBehaviour
 {
     public enum EnemyType
     {
-        A, B, C
+        A, Zombie, C
     }
     public EnemyType enemyType;
 
@@ -173,14 +173,32 @@ public class EnemyNavMovement : MonoBehaviour
     private void ThinkEnemy()
     {
         int Pattan = Random.Range(0, 1);
-
-        switch (Pattan)
+        switch (enemyType)
         {
-            case 0:
-                StartCoroutine(Taunt());
-                StartCoroutine(AttackPSOn());
+
+
+            case EnemyType.A:
+
+                switch (Pattan)
+                {
+                    case 0:
+                        StartCoroutine(Taunt());
+                        StartCoroutine(AttackPSOn());
+                        break;
+
+
+                }
+           break;
+
+
+
+            case EnemyType.Zombie:
+                Debug.Log("АјАн");
+
                 break;
+
         }
+        
     }
     [SerializeField] float PsTyming_1;
     IEnumerator AttackPSOn()

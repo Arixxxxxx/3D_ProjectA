@@ -484,6 +484,10 @@ public class PlayerMoveController : MonoBehaviour
         CameraManager.inst.F_ChangeCam(0);
     }
 
+    public Vector3 F_Get_PlayerCurPos()
+    {
+        return transform.position;
+    }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
 

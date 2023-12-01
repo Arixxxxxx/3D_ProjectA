@@ -8,10 +8,12 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: AN_Broadleaf_Bark
-  m_Shader: {fileID: 4800000, guid: c61194769c49566439e564fcdf2deff8, type: 3}
-  m_ValidKeywords:
-  - _COVERAGEOVERLAYTYPE_VERTEX_POSITION
+  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
   m_InvalidKeywords:
+  - _COVERAGEOVERLAYTYPE_VERTEX_POSITION
   - _INVERTCOVERAGE_ON
   - _SMOOTHNESSCHANEL_R
   - _SMOOTHNESSFROM_R
@@ -19,40 +21,30 @@ Material:
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - TextureSample0:
-        m_Texture: {fileID: 0}
+    - Texture2D_1F88A40D:
+        m_Texture: {fileID: 2800000, guid: 1102849be61710041aadd449ea453a78, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _BarkAlbedo:
-        m_Texture: {fileID: 2800000, guid: d05a31efd9dc7c6488fb918108b5550a, type: 3}
+    - Texture2D_384F2068:
+        m_Texture: {fileID: 2800000, guid: 6e1be256c580ce54ea3534ffd2bb8ab0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _BarkNormal:
-        m_Texture: {fileID: 2800000, guid: 483ab17773087af4aa1652661dd09df7, type: 3}
+    - Texture2D_3F9B8498:
+        m_Texture: {fileID: 2800000, guid: 314dfa61db4c36245afc16327c155786, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _BarkSmoothness:
+    - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _CoverageAlbedo:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _CoverageMask:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _CoverageNormal:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -72,22 +64,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _GroundAlbedo:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _GroundNormal:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _GroundTexture:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _LeavesTexture:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -104,39 +80,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Smoothness:
-        m_Texture: {fileID: 2800000, guid: 81206ade85524074caa32cff96bcc7fb, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SnowAlbedo:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SnowNormal:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SurfaceAlbedo:
-        m_Texture: {fileID: 2800000, guid: d05a31efd9dc7c6488fb918108b5550a, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SurfaceNormal:
-        m_Texture: {fileID: 2800000, guid: 483ab17773087af4aa1652661dd09df7, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Texture0:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _TextureSample0:
-        m_Texture: {fileID: 2800000, guid: 16d574e53541bba44a84052fa38778df, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _TextureSample1:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _texcoord:
+    - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -154,68 +98,65 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AlphaCutoff: 0.5
-    - _BlendNormals: 0
-    - _BlendNormals1: 1
-    - _BottomCoverage: 0
+    - Boolean_1F154CB1: 0
+    - Boolean_4D481D79: 0
+    - Vector1_2DAFC618: 1
+    - Vector1_3BADBCA3: 0
+    - Vector1_A953AB47: 1
+    - Vector1_D4371E4A: 1
+    - Vector1_D9C0A08D: 1
+    - _AddPrecomputedVelocity: 0
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _Blend: 0
+    - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
-    - _COVERAGE: 0
-    - _Color2Int: 1
-    - _Color2Power: 1
-    - _CoverageContrast: 1
-    - _CoverageFade: -0.02
-    - _CoverageLevel: 0
-    - _CoverageOverlayType: 1
-    - _CoverageSmoothness: 0.1
-    - _CoverageThickness: 0
-    - _CoverageThicknessLevel: 0
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
+    - _Cull: 2
     - _Cutoff: 0.5
+    - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Float0: 0
+    - _DstBlendAlpha: 0
+    - _EnvironmentReflections: 1
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
-    - _Ground: 0
-    - _GroundFade: 1
-    - _GroundLevel: 0
-    - _GroundTexture: 0
-    - _InvertCoverage: 1
-    - _Keyword0: 0
     - _Metallic: 0
     - _Mode: 0
-    - _NormalFromCoverage: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _QueueControl: 0
     - _QueueOffset: 0
-    - _SNOW: 0
+    - _ReceiveShadows: 1
     - _Smoothness: 0.3
-    - _SmoothnessChanel: 0
-    - _SmoothnessPower: 1
     - _SmoothnessTextureChannel: 0
-    - _Smoothnessfrom: 0
-    - _Snow: 0
-    - _SnowAmount: 1
-    - _SnowFade: 0.3
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _SurfaceSmoothness: 0.2
-    - _ThicknessLevel: 1
-    - _ThicknessLevel1: 1
+    - _SrcBlendAlpha: 1
+    - _Surface: 0
     - _UVSec: 0
-    - _WindForce: 1
-    - _WindSpeed: 1
-    - _WindWavesScale: 1
+    - _WorkflowMode: 1
     - _ZWrite: 1
-    - __dirty: 0
     m_Colors:
-    - _BarkColor: {r: 0.7, g: 0.55846995, b: 0.48196718, a: 0}
+    - Color_B11A0B8E: {r: 0.8, g: 0.8, b: 0.8, a: 0}
+    - Vector2_161E53D1: {r: 1, g: 1, b: 0, a: 0}
+    - Vector2_BD63EE59: {r: 0, g: 0, b: 0, a: 0}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color1: {r: 1, g: 1, b: 1, a: 0}
-    - _Color2: {r: 1, g: 1, b: 1, a: 0}
-    - _CoverageColor: {r: 0.20754713, g: 0.20754713, b: 0.20754713, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
-    - _GroundColor: {r: 0.4811321, g: 0.36026713, b: 0.27006942, a: 0}
-    - _SurfaceColor: {r: 0.59, g: 0.47439185, b: 0.40662158, a: 0}
+    - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
+--- !u!114 &7758896989129132770
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7

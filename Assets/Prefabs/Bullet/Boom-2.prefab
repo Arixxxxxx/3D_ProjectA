@@ -19227,6 +19227,7 @@ GameObject:
   - component: {fileID: 4745898257866051034}
   - component: {fileID: -5222682613829868558}
   - component: {fileID: -1999938521149308924}
+  - component: {fileID: 1208783993677317364}
   m_Layer: 0
   m_Name: Boom-2
   m_TagString: Untagged
@@ -24082,10 +24083,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 801f661327cbc984a8edd1c946d219e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BoomObj: {fileID: 0}
   MinDMG: 150
   MaxDMG: 250
-  playbackRatio: 0
+--- !u!54 &1208783993677317364
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4737920930614407125}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &6363480140085919001
 GameObject:
   m_ObjectHideFlags: 0

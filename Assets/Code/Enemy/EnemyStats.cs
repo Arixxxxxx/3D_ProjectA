@@ -5,7 +5,11 @@ using UnityEngine;
 
 public class EnemyStats : MonoBehaviour
 {
-    
+    public enum EnemyType { Normal, Zombie}
+    public EnemyType type;
+    Enemy_NewViersion_Movement moveSc;
+
+
     [SerializeField] private float CurHP;
     [SerializeField] private float MaxHP;
     [SerializeField] private float MinAttackDMG;
@@ -23,15 +27,20 @@ public class EnemyStats : MonoBehaviour
 
     private void OnEnable()
     {
-        CurHP = MaxHP;
-        
+        Init();
     }
+
     private void Start()
     {
+        if (type == EnemyType.Zombie)
+        {
+            moveSc = GetComponent<Enemy_NewViersion_Movement>();
+        }
         anim = GetComponentInParent<Animator>();
         HP_Bar = transform.Find("HpBar").GetComponent<Transform>();
         hpBar_anim= HP_Bar.GetComponent<Animator>();
         _DMGBOX = transform.Find("DmgFontPoint").GetComponent<Transform>() ;
+
     }
 
     private void Update()
@@ -41,12 +50,22 @@ public class EnemyStats : MonoBehaviour
         hitCount = (int)Mathf.Repeat(hitCount, 4);
     }
 
+    private void Init()
+    {
+        CurHP = MaxHP;
+        isDead = false;
+    }
     
     public void F_OnHit(float DMG, bool isCri)
     {
         if(!isHit && !isDead)
         {
             isHit = true;
+
+            if(type == EnemyType.Zombie) 
+            {
+                moveSc.F_isAutoAttackFalse();
+            }
             
             if (CurHP > 0)
             {
@@ -68,20 +87,22 @@ public class EnemyStats : MonoBehaviour
                 //대미지 폰트 소환
                 GameObject obj = PoolManager.Inst.F_GetObj(0);
                 obj.GetComponent<DMGFontMoveUp>().F_SetFont(DMG, _DMGBOX, isCri);
-
                 if (CurHP <= 0)
                 {
                     isDead = true;
                     anim.SetTrigger("Dead");
                     HP_Bar.gameObject.SetActive(false);
-                }
-            }
-           else if(CurHP <= 0)
-            {
-                isDead = true;
-                anim.SetTrigger("Dead");
-            }
 
+                    switch (type)
+                    {
+                        case EnemyType.Zombie:
+                            moveSc.F_Dead();
+                            break;
+                    }
+                }
+
+            }
+        
         }
         
         
