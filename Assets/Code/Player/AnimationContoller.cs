@@ -43,7 +43,16 @@ public class AnimationContoller : MonoBehaviour
     bool isAttackStart;
     [SerializeField] bool aimOn;
     bool isInWater;
-    public bool IsAttackStart {  get { return isAttackStart; } }
+    [Header("# Window Cheak")]
+    [Space]
+    [SerializeField] bool isWindowPopUp;
+
+    public void SetWindowPopUp(bool _value)
+    {
+        isWindowPopUp = _value;
+    }
+
+    public bool IsAttackStart { get { return isAttackStart; } }
     public bool Isdodge { get { return isDodge; } set { isDodge = value; } }
     Camera mainCam;
 
@@ -57,10 +66,15 @@ public class AnimationContoller : MonoBehaviour
     {
         mainCam = Camera.main;
         Gm = GameManager.Inst;
+        Gm.SetAction((bool value) =>
+        {
+            SetWindowPopUp(value);
+        });
     }
     private void Update()
     {
-       if(Gm.IsWindowOpen == true) { return; }
+        if (isWindowPopUp == true) return;
+        
         CheakInput();
         AimOnAnimation();
         MathfValueFuntion();
@@ -89,22 +103,22 @@ public class AnimationContoller : MonoBehaviour
             case 1:
                 if (_value == true && !layerWeightOnce)
                 {
-                    StartCoroutine(AniLayer_Weight(1,true));
+                    StartCoroutine(AniLayer_Weight(1, true));
                 }
                 else if (_value == false && !layerWeightOnce)
                 {
-                    StartCoroutine(AniLayer_Weight(1,false));
+                    StartCoroutine(AniLayer_Weight(1, false));
                 }
                 break;
 
             case 2:
                 if (_value == true && !layerWeightOnce)
                 {
-                    StartCoroutine(AniLayer_Weight(2,true));
+                    StartCoroutine(AniLayer_Weight(2, true));
                 }
                 else if (_value == false && !layerWeightOnce)
                 {
-                    StartCoroutine(AniLayer_Weight(2,false));
+                    StartCoroutine(AniLayer_Weight(2, false));
                 }
                 break;
         }
@@ -120,8 +134,8 @@ public class AnimationContoller : MonoBehaviour
         {
             case 1:
 
-                switch (_value) 
-                
+                switch (_value)
+
                 {
                     case true:
                         weightFloat = 0;
@@ -154,7 +168,7 @@ public class AnimationContoller : MonoBehaviour
 
                 break;
 
-                case 2:
+            case 2:
                 switch (_value)
 
                 {
@@ -194,8 +208,8 @@ public class AnimationContoller : MonoBehaviour
 
 
     }
-    
-    
+
+
 
     [SerializeField] float inputMouseVertical;
     [SerializeField] float mouseVerticalSensevity;
@@ -203,7 +217,7 @@ public class AnimationContoller : MonoBehaviour
     float _animVerfloat;
     private void CheakInput()
     {
-        
+
         _Push1KeyDown = Input.GetKeyDown(KeyCode.Alpha1);
 
         verSpeedValue = Input.GetAxis("Vertical") * 0.5f;
@@ -233,27 +247,27 @@ public class AnimationContoller : MonoBehaviour
         CheakVelocity = Mathf.Abs(horiSpeedValue) + Mathf.Abs(verSpeedValue);
 
         if (CheakVelocity > 0)
-       {
+        {
             isCharacterMove = true;
             ononon = false;
         }
         else
         {
             isCharacterMove = false;
-           
+
         }
 
-        if(isCharacterMove == true && curModeValue != 0 )
+        if (isCharacterMove == true && curModeValue != 0)
         {
             anim.SetLayerWeight(2, 0);
         }
-        else if(isCharacterMove == false && curModeValue != 0 && !ononon)
+        else if (isCharacterMove == false && curModeValue != 0 && !ononon)
         {
             ononon = true;
             anim.SetLayerWeight(2, 1);
         }
-         
-        if(curModeValue == 0 && anim.GetLayerWeight(2) != 0)
+
+        if (curModeValue == 0 && anim.GetLayerWeight(2) != 0)
         {
             anim.SetLayerWeight(2, 0);
         }
@@ -263,7 +277,7 @@ public class AnimationContoller : MonoBehaviour
     bool isboomAttackDleay;
     private void AimOnAnimation()
     {
-        if(aimOn == true && curModeValue == 1 && anim.GetBool("AimMode") == true)
+        if (aimOn == true && curModeValue == 1 && anim.GetBool("AimMode") == true)
         {
             battleSc.F_OffAimMode(1);
         }
@@ -272,7 +286,7 @@ public class AnimationContoller : MonoBehaviour
         {
             anim.SetLayerWeight(1, 0);
         }
-        if(aimOn == true)
+        if (aimOn == true)
         {
             if (anim.GetLayerWeight(1) != 1 && CheakVelocity > 0)
             {
@@ -282,9 +296,9 @@ public class AnimationContoller : MonoBehaviour
             {
                 anim.SetLayerWeight(1, 0);
             }
-                anim.SetFloat("InputMouseVertical", inputMouseVertical);
-            
-            if (isLeftClick && Physics.Raycast(mainCam.transform.position, mainCam.transform.forward,out RaycastHit hit, shotRayDistance) && !isboomAttackDleay)
+            anim.SetFloat("InputMouseVertical", inputMouseVertical);
+
+            if (isLeftClick && Physics.Raycast(mainCam.transform.position, mainCam.transform.forward, out RaycastHit hit, shotRayDistance) && !isboomAttackDleay)
             {
                 isboomAttackDleay = true;
 
@@ -295,8 +309,8 @@ public class AnimationContoller : MonoBehaviour
                 gunShotPs[1].Play();
                 battleSc.F_useBullet();
 
-                GameObject bullet_obj = Instantiate(Bullet, BulletStartPoint.position, transform.rotation, PoolManager.Inst.transform) ;
-                bullet_obj.GetComponent<Rigidbody>().AddForce(mainCam.transform.forward * shotPower, ForceMode.Impulse) ;
+                GameObject bullet_obj = Instantiate(Bullet, BulletStartPoint.position, transform.rotation, PoolManager.Inst.transform);
+                bullet_obj.GetComponent<Rigidbody>().AddForce(mainCam.transform.forward * shotPower, ForceMode.Impulse);
 
                 Invoke("BoomAttackDleay_False_Funtion", battleSc.RangeBoomAttackDleay);
 
@@ -307,14 +321,14 @@ public class AnimationContoller : MonoBehaviour
     {
         isboomAttackDleay = false;
     }
-    
+
     float shotLightIntensityValue;
     WaitForSeconds LightIntervalTime = new WaitForSeconds(0.3f);
     IEnumerator ShotLightON()
     {
         shotLightIntensityValue = 0;
 
-        while(shotLightIntensityValue <= 10)
+        while (shotLightIntensityValue <= 10)
         {
             shotLightIntensityValue += Time.deltaTime * 20;
 
@@ -373,7 +387,13 @@ public class AnimationContoller : MonoBehaviour
 
     private void ApllyAnimator()
     {
-        
+        if (isWindowPopUp)
+        {
+            parameter_VerticalValue = 0;
+            parameter_HorizontalValue = 0;
+            Debug.Log("11");
+        }
+
         anim.SetFloat("Horizontal", parameter_HorizontalValue);
         anim.SetFloat("Vertical", parameter_VerticalValue);
 
@@ -414,18 +434,18 @@ public class AnimationContoller : MonoBehaviour
     bool attack1Once;
     public void F_MeleeAttack()
     {
-        
+
 
         if (isDodge) { return; }
-        
-        
+
+
         meleeAttackNum++;
 
-        if(CheakVelocity > 0 && meleeAttackNum > 0)
+        if (CheakVelocity > 0 && meleeAttackNum > 0)
         {
             anim.SetLayerWeight(1, 1);
         }
-        
+
         if (meleeAttackNum == 1 && attack1Once == false)
         {
             attack1Once = true;
@@ -434,7 +454,7 @@ public class AnimationContoller : MonoBehaviour
             CameraManager.inst.F_FireCameraZoonOutIn();
             player.IsAttacking = true;
             StartCoroutine(ComboAttackParticle(0));
-      
+
 
 
 
@@ -611,7 +631,7 @@ public class AnimationContoller : MonoBehaviour
             anim.SetIKPosition(AvatarIKGoal.RightFoot, HitPosR);
         }
 
-       
+
         //if (aimOn == true)
         //{
         //    anim.SetLookAtWeight(1.0f);
@@ -631,7 +651,7 @@ public class AnimationContoller : MonoBehaviour
 
     private void Swim_AnimationConllor()
     {
-        if(isInWater == true && anim.GetBool("Swim") == false)
+        if (isInWater == true && anim.GetBool("Swim") == false)
         {
             anim.SetBool("Swim", isInWater);
         }

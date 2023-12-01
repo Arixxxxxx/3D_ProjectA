@@ -162,7 +162,7 @@ public class Enemy_NewViersion_Movement : MonoBehaviour
     IEnumerator ZombieScream_AttackStart()
     {
         doScream = true;
-        transform.LookAt(playerPos);
+        //transform.LookAt(playerPos);
         anim.SetTrigger("scream");
         yield return new WaitForSeconds(2.25f);
         startOk = true;

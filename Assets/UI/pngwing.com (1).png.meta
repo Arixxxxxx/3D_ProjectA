@@ -1479,9 +1479,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 127
-        y: 28
+        y: 37
         width: 44
-        height: 17
+        height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1491,6 +1491,27 @@ TextureImporter:
       bones: []
       spriteID: 3a476f8749a8626478a0d566bf421edd
       internalID: -273140085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pngwing.com (1)_66
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 28
+        width: 44
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d096061cf0d30424ba8c3058a71bd0a0
+      internalID: 143431803
       vertices: []
       indices: 
       edges: []
@@ -1569,6 +1590,7 @@ TextureImporter:
       pngwing.com (1)_63: 693501567
       pngwing.com (1)_64: 901763863
       pngwing.com (1)_65: -273140085
+      pngwing.com (1)_66: 143431803
       pngwing.com (1)_7: 798022092
       pngwing.com (1)_8: -1178969608
       pngwing.com (1)_9: -947206281

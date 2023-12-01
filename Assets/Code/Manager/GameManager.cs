@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Inst;
-    [SerializeField] GameObject[] windowCheker;
+    [SerializeField] GameObject InsertWindow_Obj;
 
     private GameObject water_Obj;
     public GameObject Water_Obj { get { return water_Obj; } set { water_Obj = value; } }
@@ -17,8 +18,27 @@ public class GameManager : MonoBehaviour
     private bool gameStopRequest;
     private bool isCursorOn;
     private bool inHomeTown;
-    private bool isWindowOpen;
-    public bool IsWindowOpen { get { return isWindowOpen; }}
+    [SerializeField] private bool isWindowOpen;
+
+    private UnityAction<bool> readyAction;
+
+    public bool IsWindowOpen {
+        set
+        {
+            isWindowOpen = value;
+            readyAction?.Invoke(IsWindowOpen);
+        }
+        get 
+        {
+            return isWindowOpen; 
+        }
+    }
+
+    public void SetAction(UnityAction<bool> _action)
+    {
+        readyAction = _action;
+    }
+
     public bool InHomeTown {  get { return inHomeTown; } set { inHomeTown = value; } }
 
     private void Awake()
@@ -44,13 +64,13 @@ public class GameManager : MonoBehaviour
     
     private void GameUI_Or_WindowOn_Cheaker()
     {
-        if (windowCheker[0].gameObject.activeSelf == true)
+        if (InsertWindow_Obj.gameObject.activeSelf == true)
         {
-            isWindowOpen = true;
+            IsWindowOpen = true;
         }
         else
         {
-            isWindowOpen = false;
+            IsWindowOpen = false;
         }
     }
     private void OnScrrenCursurOnOFF()
@@ -85,4 +105,8 @@ public class GameManager : MonoBehaviour
         no = value;
      }
     
+    public bool F_Windows_Popup()
+    {
+        return isWindowOpen;
+    }
 }

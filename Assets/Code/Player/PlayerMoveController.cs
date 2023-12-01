@@ -488,6 +488,12 @@ public class PlayerMoveController : MonoBehaviour
     {
         return transform.position;
     }
+
+    public bool F_IsInWater()
+    {
+        return IsinWater;
+    }
+    
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
 
