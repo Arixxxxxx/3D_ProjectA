@@ -6,16 +6,20 @@ public class PoolManager : MonoBehaviour
 {
     public static PoolManager Inst;
 
-    [SerializeField] GameObject[] DmgFont_Obj;
+    int ObjCount = 2;
+    [SerializeField] GameObject DmgFont_Obj;
     [SerializeField] GameObject[] BoomBullet3EA;
+    [SerializeField] GameObject[] Particle;
 
-    Queue<GameObject>[] pool;
+    [SerializeField] Queue<GameObject>[] pool;
+    [SerializeField] Transform[] PoolParent;
 
     [SerializeField] int FontOBJ_EA;
     [SerializeField] int BoomOBJ_EA;
+    [SerializeField] int TelePort_PS_EA;
 
-
-    Transform[] PoolParent;
+ 
+  
     
    
     
@@ -31,7 +35,6 @@ public class PoolManager : MonoBehaviour
             Destroy(this);
         }
 
-
         Init();
     }
     void Start()
@@ -42,21 +45,30 @@ public class PoolManager : MonoBehaviour
 
     private void Init()
     {
-        int ObjCount = DmgFont_Obj.Length;
-        PoolParent = new Transform[ObjCount];
-        PoolParent[0] = transform.Find("ObjPool/DmgFont").transform;
-        
-        pool = new Queue<GameObject>[ObjCount];
+       
+        PoolParent = new Transform[2];
+        pool = new Queue<GameObject>[2];
 
-        for(int i = 0; i < ObjCount; i++)
+        PoolParent[0] = transform.Find("ObjPool/DmgFont").transform;
+        PoolParent[1] = transform.Find("ObjPool/Teleport").transform;
+
+        for(int i = 0; i < pool.Length; i++)
         {
             pool[i] = new Queue<GameObject>();
         }
 
         for(int i = 0;i < FontOBJ_EA; i++)
         {
-            GameObject obj = Instantiate(DmgFont_Obj[0], transform.position, Quaternion.identity, PoolParent[0]);
+            GameObject obj = Instantiate(DmgFont_Obj, transform.position, Quaternion.identity, PoolParent[0]);
             pool[0].Enqueue(obj);
+            obj.SetActive(false);
+        }
+
+        //텔레포트PS
+        for(int i = 0; i< TelePort_PS_EA; i++)
+        {
+            GameObject obj = Instantiate(Particle[0], transform.position, Quaternion.Euler(new Vector3(-90,0,0)), PoolParent[1]);
+            pool[1].Enqueue(obj);
             obj.SetActive(false);
         }
 
@@ -64,7 +76,7 @@ public class PoolManager : MonoBehaviour
 
 
     /// <summary>
-    /// 오브젝트 풀링 [ 0 대미지폰트 / ]
+    /// 오브젝트 풀링 [ 0 = 대미지폰트 , 1 = 텔레포트 파티클, ]
     /// </summary>
     /// <param name="Value"></param>
     public GameObject F_GetObj(int Value)
@@ -76,7 +88,7 @@ public class PoolManager : MonoBehaviour
           
                 if (pool[0].Count <= 0)
                 {
-                    GameObject obj1 = Instantiate(DmgFont_Obj[0], transform.position, Quaternion.identity, PoolParent[0]);
+                    GameObject obj1 = Instantiate(DmgFont_Obj, transform.position, Quaternion.identity, PoolParent[0]);
                     pool[0].Enqueue(obj1);
                     obj1.SetActive(false);
 
@@ -85,6 +97,19 @@ public class PoolManager : MonoBehaviour
                 obj = pool[0].Dequeue();
                 obj.gameObject.SetActive(true);
                 return obj;
+
+            case 1:
+                if (pool[1].Count <= 0)
+                {
+                    GameObject obj2 = Instantiate(Particle[0], transform.position, Quaternion.identity, PoolParent[1]);
+                    pool[1].Enqueue(obj2);
+                    obj2.SetActive(false);
+                }
+                obj = pool[1].Dequeue();
+                
+
+                return obj;
+
         }
 
         return default;
@@ -105,6 +130,15 @@ public class PoolManager : MonoBehaviour
                 obj.transform.position = Vector3.zero;
                 pool[0].Enqueue(obj);
                 break;
+
+            case 1:
+                obj.SetActive(false);
+                obj.transform.SetParent(PoolParent[1]);
+                obj.transform.position = Vector3.zero;
+                pool[1].Enqueue(obj);
+                break;
         }
+
+        
     }
 }

@@ -60,7 +60,7 @@ public class InWater_Air_Bar_Updater : MonoBehaviour
         // 물속에 몸은 있고 머리가 물밖으로 나와있을때
         else if (inwater == true && charHeadOutOfWater == false) 
         {
-            curAirTime+= Time.deltaTime;
+            curAirTime+= Time.deltaTime * 2.5f;
             
             if(curAirTime >= MaxAirTime)
             {
@@ -76,7 +76,7 @@ public class InWater_Air_Bar_Updater : MonoBehaviour
         // 물밖에있을때
         if(inwater == false)
         {
-            curAirTime += Time.deltaTime;
+            curAirTime += Time.deltaTime * 2.5f;
 
             if (curAirTime >= MaxAirTime)
             {

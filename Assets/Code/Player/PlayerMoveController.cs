@@ -64,6 +64,7 @@ public class PlayerMoveController : MonoBehaviour
     [SerializeField] float cheakGroundRadios;
     [SerializeField] float cheakGroundDis;
     [SerializeField] LayerMask GroundLayer;
+    [SerializeField] Transform TownChar;
     Vector3 DodgeVec;
     bool DodgeVecOnce;
 
@@ -493,7 +494,25 @@ public class PlayerMoveController : MonoBehaviour
     {
         return IsinWater;
     }
-    
+
+    // 본인과 플레이어 거리 참조
+    public float F_Get_PlayerAndObject_Distance(int Value, Vector3 _InputTansform)
+    {
+        switch (Value)
+        {
+            case 0:
+                float result = Vector3.Distance(_InputTansform, transform.position);
+                return result;
+
+            case 1:
+                float result1 = Vector3.Distance(_InputTansform, TownChar.position);
+                return result1;
+
+        }
+
+        return -1;
+    }
+
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
 

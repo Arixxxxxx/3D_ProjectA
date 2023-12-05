@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Inst;
-    [SerializeField] GameObject InsertWindow_Obj;
+    [SerializeField] GameObject[] InsertWindow_Obj;
 
     private GameObject water_Obj;
     public GameObject Water_Obj { get { return water_Obj; } set { water_Obj = value; } }
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
     
     private void GameUI_Or_WindowOn_Cheaker()
     {
-        if (InsertWindow_Obj.gameObject.activeSelf == true)
+        if (InsertWindow_Obj[0].gameObject.activeSelf == true || InsertWindow_Obj[1].gameObject.activeSelf == true)
         {
             IsWindowOpen = true;
         }
@@ -77,6 +77,15 @@ public class GameManager : MonoBehaviour
     {
         if (inHomeTown) { Cursor.lockState = CursorLockMode.None; return; }
         if (isCursorOn)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        if (IsWindowOpen)
         {
             Cursor.lockState = CursorLockMode.None;
         }

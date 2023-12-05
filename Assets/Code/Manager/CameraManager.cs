@@ -10,6 +10,7 @@ public class CameraManager : MonoBehaviour
     public static CameraManager inst;
     [SerializeField] PlayerNavMeshSC navsc;
     [SerializeField] CinemachineVirtualCamera[] Cams;
+    [SerializeField] CinemachineVirtualCamera[] NpcCamera;
     [SerializeField] Camera TownCam;
     [SerializeField] Camera mainCam;
     [SerializeField] GameObject Player;
@@ -18,6 +19,7 @@ public class CameraManager : MonoBehaviour
     PlayerMoveController player;
     [SerializeField] bool inDownTown;
     [SerializeField] float rayDis;
+    GameManager Gm;
     private void Awake()
     {
         if (inst == null)
@@ -35,6 +37,7 @@ public class CameraManager : MonoBehaviour
     private void Start()
     {
         mainCam = Camera.main;
+        Gm = GameManager.Inst;
     }
     private void Update()
     {
@@ -43,6 +46,7 @@ public class CameraManager : MonoBehaviour
         LockOnCameraRotationSetting();
         mouseWhellZoomInOut();
         MainCamGroundCheker();
+        Cheak_Popup_Windows();
     }
     float Timer;
     Vector3 stopVec;
@@ -51,7 +55,42 @@ public class CameraManager : MonoBehaviour
     bool isGround;
     bool once;
     float PosY;
+    float camsX_Speed_Value, camsY_Speed_Value;
+    private void Cheak_Popup_Windows()
+    {
+        if (Gm.IsWindowOpen == true)
+        {
+            switch(curCamNum)
+            {
+                case 0:
+                    if(camsX_Speed_Value == 0 || camsY_Speed_Value == 0)
+                    {
+                        camsX_Speed_Value = Cams[0].GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
+                        camsY_Speed_Value = Cams[0].GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;
+                    }
+                    Cams[0].GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = 0;
+                   Cams[0].GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = 0;
+                    break;
+            }
+        }
+        else
+        {
+            switch (curCamNum)
+            {
+                case 0:
+                    if (camsX_Speed_Value != 0 || camsY_Speed_Value != 0)
+                    {
+                        Cams[0].GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = camsX_Speed_Value;
+                        Cams[0].GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = camsY_Speed_Value;
+                    }
 
+                    camsX_Speed_Value = 0;
+                    camsY_Speed_Value = 0;
+
+                    break;
+            }
+        }
+    }
     private void MainCamGroundCheker()
     {
         isGround = Physics.Raycast(mainCam.transform.position, Vector3.down, out RaycastHit hit, rayDis, LayerMask.GetMask("Ground"));
@@ -160,7 +199,7 @@ public class CameraManager : MonoBehaviour
     /// <summary>
     /// Ä«¸Þ¶ó Ã¼ÀÎÁ® / 0¹ø 3ÀÎÄª / 1¹ø 1ÀÎÄª / 2¹ø ¸¶À» / 3¹ø Å¸°ÙÆÃ
     /// </summary>
-    /// <param name="value">0¹ø 3ÀÎÄª / 1¹ø 1ÀÎÄª / 2¹ø ¸¶À» / 3¹ø Å¸°ÙÆÃ</param>
+    /// <param name="value">0¹ø 3ÀÎÄª / 1¹ø 1ÀÎÄª / 2¹ø ¸¶À» / 3¹ø Å¸°ÙÆÃ // 4¹ø NPC_1</param>
     public void F_ChangeCam(int value)
     {
         curCamNum = value;
@@ -172,25 +211,38 @@ public class CameraManager : MonoBehaviour
                 Cams[1].gameObject.SetActive(false);
                 Cams[2].gameObject.SetActive(false);
                 TownCam.gameObject.SetActive(false);
+                NpcCamera[0].gameObject.SetActive(false);
                 break;
             case 1: // ÃÑ½ò¶§ 1ÀÎÄª ¿¡ÀÓÄ«¸Þ¶ó
                 Cams[0].gameObject.SetActive(false);
                 Cams[1].gameObject.SetActive(true);
                 Cams[2].gameObject.SetActive(false);
                 TownCam.gameObject.SetActive(false);
+                NpcCamera[0].gameObject.SetActive(false);
                 break;
             case 2: // ¸¶À» ÄõÅÍºä Ä«¸Þ¶ó
                 Cams[0].gameObject.SetActive(false);
                 Cams[1].gameObject.SetActive(false);
                 Cams[2].gameObject.SetActive(false);
                 TownCam.gameObject.SetActive(true);
+                NpcCamera[0].gameObject.SetActive(false);
                 break;
             case 3: // Å¸°ÙÆÃ Ä«¸Þ¶ó
                 Cams[0].gameObject.SetActive(false);
                 Cams[1].gameObject.SetActive(false);
                 Cams[2].gameObject.SetActive(true);
                 TownCam.gameObject.SetActive(false);
+                NpcCamera[0].gameObject.SetActive(false);
                 break;
+
+            case 4:
+                Cams[0].gameObject.SetActive(false);
+                Cams[1].gameObject.SetActive(false);
+                Cams[2].gameObject.SetActive(false);
+                TownCam.gameObject.SetActive(false);
+                NpcCamera[0].gameObject.SetActive(true);
+                break;
+
         }
     }
 

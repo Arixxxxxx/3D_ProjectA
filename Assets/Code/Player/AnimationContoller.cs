@@ -73,8 +73,15 @@ public class AnimationContoller : MonoBehaviour
     }
     private void Update()
     {
-        if (isWindowPopUp == true) return;
-        
+        if (isWindowPopUp == true)
+        {
+            anim.SetFloat("Horizontal", 0);
+            anim.SetFloat("Vertical", 0);
+            return;
+        }
+
+
+
         CheakInput();
         AimOnAnimation();
         MathfValueFuntion();
@@ -661,4 +668,5 @@ public class AnimationContoller : MonoBehaviour
         }
     }
 
+    
 }
