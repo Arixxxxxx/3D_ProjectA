@@ -21,7 +21,7 @@ public class TalkData : MonoBehaviour
 
     private void Awake()
     {
-        if(inst == null)
+        if (inst == null)
         {
             inst = this;
         }
@@ -40,12 +40,24 @@ public class TalkData : MonoBehaviour
     private void Update()
     {
         InteractionNPC();
+        CurNpCNum_Updater();
     }
 
+    private void CurNpCNum_Updater()
+    {
+        if(NearNpc != null)
+        {
+            NPC_Talk_Num sc = NearNpc.GetComponent<NPC_Talk_Num>();
+            CurNpcNum = sc.F_Get_NPC_TalkID();
+        }
+    }
     private void TalkDataInit()
     {
         TalkList.Add(100, new string[] { "안녕하세요. 이곳에 오신걸 환영합니다.\n 앞에 있는 마을로가서 퀘스트를 받고 마을을 체험해보세요.", "행운을 빌겠습니다." });
+        TalkList.Add(101, new string[] { "마을에 잘 찾아오셨네요!\n 마을안에 게시판에서 추가적인 퀘스트를 받을 수 있습니다.\n 마을을 둘러보세요. :)" });
+        TalkList.Add(102, new string[] { "아직 드릴말씀이 없네요. 나중에 다시 찾아오세요.." });
     }
+
 
     private string Get_TalkINdex(int npcID, int talkIndex)
     {
@@ -65,7 +77,7 @@ public class TalkData : MonoBehaviour
     bool chat;
     [SerializeField] int talkIndexs;
     bool isNextTextOk;
-    
+
     string TextValue;
     private void InteractionNPC()
     {
@@ -84,14 +96,16 @@ public class TalkData : MonoBehaviour
                 TalkBok.gameObject.SetActive(true);
             }
 
-           
+
             TextValue = Get_TalkINdex(CurNpcNum, talkIndexs);
 
 
 
             if (TextValue == null && TalkBok.gameObject.activeSelf == true) // 대화종료시
             {
-                End_Chat_Envent();
+                End_Chat_Envent(); // 종료 이벤트
+
+
                 TalkBok.gameObject.SetActive(false);
                 CameraManager.inst.F_ChangeCam(0);
                 talkIndexs = 0;
@@ -107,7 +121,7 @@ public class TalkData : MonoBehaviour
                 talkIndexs++;
             }
 
-            
+
             Debug.Log("++");
         }
     }
@@ -126,7 +140,6 @@ public class TalkData : MonoBehaviour
                 case "unitychan":
                     Name.text = "<< 게임가이드 NPC >>";
                     NPC_Talk_Num sc = obj.GetComponent<NPC_Talk_Num>();
-                    CurNpcNum = sc.F_Get_NPC_TalkID();
                     break;
 
             }
@@ -141,13 +154,20 @@ public class TalkData : MonoBehaviour
     // 채팅 종료후 특별한 이벤트 발동
     private void End_Chat_Envent()
     {
-        Debug.Log("1");
         switch (NearNpc.name)
         {
             case "unitychan":
 
-                StartCoroutine(Event_1());
-                
+                switch (CurNpcNum)
+                {
+                    case 100:
+                        StartCoroutine(Event_100());
+                        break;
+
+                    case 101:
+                        StartCoroutine(Event_101());
+                        break;
+                }
                 
                 break;
         }
@@ -178,17 +198,34 @@ public class TalkData : MonoBehaviour
 
     WaitForSeconds wait05 = new WaitForSeconds(0.5f);
     WaitForSeconds wait1 = new WaitForSeconds(1);
-    IEnumerator Event_1()
+    IEnumerator Event_100()
     {
-        QuestManager.inst.F_Insert_Ui_QuestList(0);
+        QuestManager.inst.F_Set_Quest(0);
+
         yield return wait05;
+
         NPC_Talk_Num sc = NearNpc.GetComponent<NPC_Talk_Num>();
         sc.F_ValueUpdate(0);
+        
         GameObject obj = PoolManager.Inst.F_GetObj(1);
         obj.SetActive(true);
         obj.GetComponent<ParticleSystem>().Play();
         obj.transform.position = NearNpc.transform.position + new Vector3(0, 1, 0);
-        NearNpc.gameObject.SetActive(false);    
+
+        Unit_TelePort.inst.F_Teleport(sc.gameObject, 0);
+        sc.F_Swithing_QuestMarker(1);
     }
 
+    IEnumerator Event_101()
+    {
+        QuestManager.inst.F_Set_Quest(0);
+        QuestManager.inst.F_player_Quest_Num_Up();
+        GameUIManager.Inst.F_QuestComplete_UI_Open(0);
+
+        yield return wait05;
+
+        NPC_Talk_Num sc = NearNpc.GetComponent<NPC_Talk_Num>();
+        sc.F_ValueUpdate(0);
+        sc.F_Swithing_QuestMarker(2);
+    }
 }

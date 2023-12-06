@@ -107,12 +107,13 @@ public class DownTownPlayerScan : MonoBehaviour
 
     }
     WaitForSeconds waitCutten = new WaitForSeconds(1);
+    WaitForSeconds wait05 = new WaitForSeconds(0.5f);
     IEnumerator EnterButton()
     {
         switch (type)
         {
             case EnterType.TownIn:
-                GameUIManager.Inst.F_BlackScrrenOn();
+                GameUIManager.Inst.F_BlackScrrenOn(); //블랙커튼
                 yield return waitCutten;
                 GameManager.Inst.F_SetScreenCursorOnOFF(true);
                 anim.Isdodge = false;
@@ -123,6 +124,8 @@ public class DownTownPlayerScan : MonoBehaviour
                 GameManager.Inst.InHomeTown = true;
                 PlayerPrefabsChanger(1);
                 questionBox.gameObject.SetActive(false);
+                yield return waitCutten;
+                GameUIManager.Inst.F_PlaceNameArt_OnOFF(1);
 
                 break;
 
@@ -135,6 +138,8 @@ public class DownTownPlayerScan : MonoBehaviour
                 camM.F_ChangeCam(0);
                 camM.F_RotChager(camPos.position, 1);
                 GameManager.Inst.F_SetScreenCursorOnOFF(false);
+                yield return waitCutten;
+                GameUIManager.Inst.F_PlaceNameArt_OnOFF(0);
 
                 break;
 
