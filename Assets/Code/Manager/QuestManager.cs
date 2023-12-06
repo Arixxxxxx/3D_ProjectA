@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using static UnityEngine.Rendering.DebugUI;
 
 public class QuestManager : MonoBehaviour
 {
@@ -30,8 +31,18 @@ public class QuestManager : MonoBehaviour
     [SerializeField] Dictionary<int, int> PlayerQuest_Situation = new Dictionary<int, int>();
 
     List<GameObject> CurPlayQuest = new List<GameObject>();
+    List<GameObject> QuestBoard_Prefab_List = new List<GameObject>();
 
     Transform CompleteQuestTransform;
+
+    [Header("# Quest Info")]
+    [Space]
+    [SerializeField] GameObject Q1_Obj_Group;
+    [SerializeField] GameObject Q2_Obj_Group;
+    
+    [SerializeField] List<int> Cur_Ea_QuestNum;
+    [SerializeField] List<int> Max_Ea_QuestNum;
+
 
     private void Awake()
     {
@@ -62,7 +73,7 @@ public class QuestManager : MonoBehaviour
     {
         WindowClose_Input_Chek();
         Insert_Quest_Board_Prefabs();
-     
+
     }
     // 플레이어 퀘스트진행 관련 함수
 
@@ -75,20 +86,38 @@ public class QuestManager : MonoBehaviour
 
     // 퀘스트넘버 올라가면 보드에 퀘스트 받을수있게 버튼 생성
     bool Quest1Start;
+    bool Quest2Start;
     private void Insert_Quest_Board_Prefabs()
     {
-        switch(player_Quest_Num)
+        switch (player_Quest_Num)
         {
             case 1:
                 if (!Quest1Start)
                 {
                     Quest1Start = true;
                     GameObject obj = Instantiate(Board_Quest_Prefabs[player_Quest_Num - 1]);
+                    QuestBoard_Prefab_List.Add(obj);
+                    obj.transform.SetParent(TownQuestBoardSlot);
+                }
+                break;
+
+            case 2:
+                if (!Quest2Start)
+                {
+                    Quest2Start = true;
+                    GameObject obj = Instantiate(Board_Quest_Prefabs[player_Quest_Num - 1]);
+                    QuestBoard_Prefab_List.Add(obj);
                     obj.transform.SetParent(TownQuestBoardSlot);
                 }
                 break;
         }
     }
+
+
+    // << 퀘스트 내용 정리 >>
+    // 퀘스트0번 마을찾기
+    // 퀘스트1번 약초캐기
+
 
     /// <summary>
     ///  퀘스트 진행사항 변경함수
@@ -110,25 +139,74 @@ public class QuestManager : MonoBehaviour
 
     }
 
-
+    // 0 퀘스트 대기(수락하면) // 1 진행중 채움->2 진행완료 -> 3 완료 -> 4
     // 퀘스트 받았음을 해당 위치에서 켜주는 함수
     // 0~1 그리고 1~2는 각기 다른곳들에서 올려줌
 
     private void Cheak_Quest_Acept_Update(int value)
     {
-        if (PlayerQuest_Situation[value] == 0) //수락
+        if (PlayerQuest_Situation[value] == 0) //대기중
         {
             PlayerQuest_Situation[value] = 1;
             F_Insert_Ui_QuestList(value);
             StartCoroutine(anim(value));
+            Enable_Quest_Obj(value); // 켜줄께 잇다면 퀘스트 오브젝트 켜줌
         }
-        else if (PlayerQuest_Situation[value] == 1)
+        else if (PlayerQuest_Situation[value] == 1) //진행중
         {
             PlayerQuest_Situation[value] = 2;
+            //F_Complete_Ui_QuestList(value);
+        }
+        else if (PlayerQuest_Situation[value] == 2) //진행완료
+        {
+            PlayerQuest_Situation[value] = 3;
+        }
+        else if (PlayerQuest_Situation[value] == 3) //퀘스트완료처리 이동
+        {
+            PlayerQuest_Situation[value] = 4;
             F_Complete_Ui_QuestList(value);
         }
     }
 
+    /// <summary>
+    ///  퀘스트번호 넣고확인 Return value <  0 = 수락전 / 1진행중 / 2완료 >
+    /// </summary>
+    /// <param name="value">퀘스트번호</param>
+    /// <returns></returns>
+    public int F_Cur_Quest_Chaker(int value)
+    {
+        return PlayerQuest_Situation[value];
+    }
+
+    // 퀘스트진행사항 추적 [외부에서 입력값 받아줌]
+    public void F_Quest_Realtime_Update(int value)
+    {
+        if (Cur_Ea_QuestNum[value] < Max_Ea_QuestNum[value])
+        {
+            Cur_Ea_QuestNum[value]++;
+
+            if (Cur_Ea_QuestNum[value] == Max_Ea_QuestNum[value])
+            {
+                F_Set_Quest(value);
+            }
+        }
+    }
+
+    // 퀘스트 열림에따라 오브젝트 활성화
+    private void Enable_Quest_Obj(int value)
+    {
+        switch (value)
+        {
+            case 1:
+                Q1_Obj_Group.SetActive(true);
+
+
+                break;
+        }
+
+    }
+
+    // 퀘스트 갱신UI창 띄움
     IEnumerator anim(int value)
     {
         switch (value)
@@ -138,7 +216,11 @@ public class QuestManager : MonoBehaviour
                 break;
 
             case 1:
-                questAcceptWindowText.text = $"퀘스트 갱신 : 초원에서 약초 캐기";
+                questAcceptWindowText.text = $"퀘스트 갱신 : 초원에서 버섯 캐기";
+                break;
+
+            case 2:
+                questAcceptWindowText.text = $"퀘스트 갱신 : 호수에서 보물상자 찾기";
                 break;
         }
 
@@ -164,29 +246,24 @@ public class QuestManager : MonoBehaviour
     // 메인화면 UI에 퀘스트 내용 입력
     public void F_Insert_Ui_QuestList(int value)
     {
-        switch (value)
-        {
-            case 0:
-                GameObject obj = Instantiate(UI_Quest[0]);
-                CurPlayQuest.Add(obj);
-                obj.transform.SetParent(UI_QuestList);
-                break;
-
-            case 1:
-                GameObject obj1 = Instantiate(UI_Quest[1]);
-                CurPlayQuest.Add(obj1);
-                obj1.transform.SetParent(UI_QuestList);
-                break;
-        }
-
+        GameObject obj = Instantiate(UI_Quest[value]);
+        CurPlayQuest.Add(obj);
+        obj.transform.SetParent(UI_QuestList);
     }
 
 
-    // 메인화면 UI에서 퀘스트 내용 제거 [완료시]
+    // 메인화면 UI 및 퀘스트보더에서 퀘스트 내용 제거 [완료시]
     public void F_Complete_Ui_QuestList(int value)
     {
         CurPlayQuest[value].transform.SetParent(CompleteQuestTransform);
         CurPlayQuest[value].gameObject.SetActive(false);
+
+        if (value > 0)  // 0번 마을찾기만 예외
+        {
+            QuestBoard_Prefab_List[value - 1].transform.SetParent(CompleteQuestTransform);
+            QuestBoard_Prefab_List[value - 1].gameObject.SetActive(false);
+        }
+
     }
 
     // 퀘스트창 게시판이 열려있다면  ESC키로 끄는 기능
@@ -196,5 +273,14 @@ public class QuestManager : MonoBehaviour
         {
             TownQuestBoard.gameObject.SetActive(false);
         }
+    }
+
+    public int[] F_Return_Quest_Obj_Ea(int value)
+    {
+        int[] result = new int[2];
+        result[0] = Cur_Ea_QuestNum[value];
+        result[1] = Max_Ea_QuestNum[value];
+
+        return result;
     }
 }

@@ -490,6 +490,11 @@ public class PlayerMoveController : MonoBehaviour
         return transform.position;
     }
 
+    public float F_Get_PlayerAndMeDistance(Vector3 value)
+    {
+        return Vector3.Distance(transform.position, value);
+    }
+
     public bool F_IsInWater()
     {
         return IsinWater;

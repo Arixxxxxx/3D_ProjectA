@@ -99,6 +99,11 @@ public class GameUIManager : MonoBehaviour
                 MiddleText.text = "< 마을로 이동 퀘스트 >";
 
                 break;
+
+            case 1:
+                QeustCompleteBosang.sprite = QuestBosang_IMG[0];
+                MiddleText.text = "< 버섯 10개 수확! >";
+                break;
         }
 
         if (QuestCompleteAnim.gameObject.activeSelf == false)

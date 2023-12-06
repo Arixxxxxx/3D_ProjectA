@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using static UnityEngine.Rendering.DebugUI;
 
 public class TalkData : MonoBehaviour
 {
@@ -205,20 +206,22 @@ public class TalkData : MonoBehaviour
         yield return wait05;
 
         NPC_Talk_Num sc = NearNpc.GetComponent<NPC_Talk_Num>();
-        sc.F_ValueUpdate(0);
+        sc.F_ValueUpdate(0); // 대화 넘버 올려줌
         
-        GameObject obj = PoolManager.Inst.F_GetObj(1);
+        GameObject obj = PoolManager.Inst.F_GetObj(1); // 순간이동 파티클
         obj.SetActive(true);
         obj.GetComponent<ParticleSystem>().Play();
         obj.transform.position = NearNpc.transform.position + new Vector3(0, 1, 0);
 
-        Unit_TelePort.inst.F_Teleport(sc.gameObject, 0);
-        sc.F_Swithing_QuestMarker(1);
+        Unit_TelePort.inst.F_Teleport(sc.gameObject, 0); // 위치이동
+        sc.F_Swithing_QuestMarker(1); // 퀘스트 마커 변경
     }
 
     IEnumerator Event_101()
     {
+        
         QuestManager.inst.F_Set_Quest(0);
+        QuestManager.inst.F_Complete_Ui_QuestList(0);
         QuestManager.inst.F_player_Quest_Num_Up();
         GameUIManager.Inst.F_QuestComplete_UI_Open(0);
 
