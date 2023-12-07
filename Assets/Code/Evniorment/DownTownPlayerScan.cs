@@ -24,6 +24,7 @@ public class DownTownPlayerScan : MonoBehaviour
     [SerializeField] Button yesButton;
     [SerializeField] Button noButton;
 
+  
     private NavMeshSurface nms;
     private CameraManager camM;
 
@@ -73,39 +74,8 @@ public class DownTownPlayerScan : MonoBehaviour
                 break;
 
         }
-        //switch (type)
-        //{
-        //    case EnterType.TownIn:
-        //        if (other.CompareTag("Player"))
-        //        {
-        //            GameManager.Inst.F_SetScreenCursorOnOFF(true);
-        //            anim.Isdodge = false;
-        //            player.F_ModeSelect("normal");
-        //            camM.F_ChangeCam(2); // 카메라 전환
-        //            camM.F_RotChager(camPos.position, 0); // 3인칭 카메라 이동
-        //            PlayerObjTransformSet(0); // 외부 플레이어 프리펩 위치 변환
-        //            GameManager.Inst.InHomeTown = true;
-        //            PlayerPrefabsChanger(1);
-
-
-        //        }
-        //        break;
-
-        //    case EnterType.TownOut:
-        //        if (other.CompareTag("Player"))
-        //        {
-        //            PlayerObjTransformSet(1);
-        //            GameManager.Inst.InHomeTown = false;
-        //            PlayerPrefabsChanger(0);
-        //            camM.F_ChangeCam(0);
-        //            camM.F_RotChager(camPos.position, 1);
-        //            GameManager.Inst.F_SetScreenCursorOnOFF(false);
-        //        }
-        //        break;
-
-        //}
-
     }
+
     WaitForSeconds waitCutten = new WaitForSeconds(1);
     WaitForSeconds wait05 = new WaitForSeconds(0.5f);
     IEnumerator EnterButton()

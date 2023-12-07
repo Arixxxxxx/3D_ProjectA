@@ -96,13 +96,18 @@ public class GameUIManager : MonoBehaviour
         {
             case 0:
                 QeustCompleteBosang.sprite = QuestBosang_IMG[0];
-                MiddleText.text = "< 마을로 이동 퀘스트 >";
+                MiddleText.text = "< 마을로 이동 완료 >";
 
                 break;
 
             case 1:
                 QeustCompleteBosang.sprite = QuestBosang_IMG[0];
-                MiddleText.text = "< 버섯 10개 수확! >";
+                MiddleText.text = "< 버섯 캐기 장인 완료 >";
+                break;
+
+            case 2:
+                QeustCompleteBosang.sprite = QuestBosang_IMG[0];
+                MiddleText.text = "< 호수속 보물상자 완료 >";
                 break;
         }
 

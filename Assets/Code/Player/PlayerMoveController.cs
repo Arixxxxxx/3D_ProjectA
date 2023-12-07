@@ -78,7 +78,7 @@ public class PlayerMoveController : MonoBehaviour
         anim = GetComponent<AnimationContoller>();
         playerBattleController = GetComponent<PlayerBattleController>();
 
-        if(Inst == null)
+        if (Inst == null)
         {
             Inst = this;
         }
@@ -93,13 +93,13 @@ public class PlayerMoveController : MonoBehaviour
         isNormalMode = true;
         GM = GameManager.Inst;
         mainCam = Camera.main;
-       
+
     }
 
     void Update()
     {
-        if(GM.IsWindowOpen == true) { return; }
-       
+        if (GM.IsWindowOpen == true) { return; }
+
         InputFuntion();
 
         if (GM.F_GetMouseScrrenRotationStop() == false)
@@ -109,7 +109,7 @@ public class PlayerMoveController : MonoBehaviour
 
         ModeChanger();
         CharRunSpeedAdd(doRun);
-        
+
 
 
         if (isInWater == false)
@@ -164,7 +164,7 @@ public class PlayerMoveController : MonoBehaviour
             charMoveVec *= 0.5f; // 뒤로이동시 이동속도 50% 감소
         }
 
-    
+
 
         if (isMeleeTargetingMode == true && lockOnEnemy != null)
         {
@@ -201,14 +201,14 @@ public class PlayerMoveController : MonoBehaviour
     float swimVerticalY;
     private void Character_Swim_Action()
     {
-        if(isInWater == true)
+        if (isInWater == true)
         {
             if (charMoveVec.z < 0)
             {
                 charMoveVec *= 0.5f; // 뒤로이동시 이동속도 50% 감소
             }
 
-            if(isNoUpInWater == true)
+            if (isNoUpInWater == true)
             {
                 swimVerticalY = Input.GetAxis("SwimSpace");
             }
@@ -235,7 +235,7 @@ public class PlayerMoveController : MonoBehaviour
 
             cCon.Move(transform.TransformDirection(charMoveVec) * SwimSpeed * Time.deltaTime);
             transform.eulerAngles += charRotVec * rotationSpeed * Time.deltaTime;
-     
+
         }
     }
     private void Char_SlopeMove() // 슬로프
@@ -257,7 +257,7 @@ public class PlayerMoveController : MonoBehaviour
 
         charMoveVec = charMoveVec.normalized;
 
-        
+
 
 
         doRun = Input.GetKey(KeyCode.LeftShift);
@@ -267,14 +267,14 @@ public class PlayerMoveController : MonoBehaviour
 
 
         SpaceBarKeyDown = Input.GetKeyDown(KeyCode.Space);
-        
+
         if (isInWater)
         {
             //SpaceBarKeyDown = Input.GetKey(KeyCode.Space);
             //XkeyDown = Input.GetKeyDown(KeyCode.X);
             //XkeyDown = Input.GetKey(KeyCode.X);
         }
-        
+
 
     }//입력신호
 
@@ -501,21 +501,10 @@ public class PlayerMoveController : MonoBehaviour
     }
 
     // 본인과 플레이어 거리 참조
-    public float F_Get_PlayerAndObject_Distance(int Value, Vector3 _InputTansform)
+    public float F_Get_PlayerAndObject_Distance(Vector3 _InputTansform)
     {
-        switch (Value)
-        {
-            case 0:
-                float result = Vector3.Distance(_InputTansform, transform.position);
-                return result;
-
-            case 1:
-                float result1 = Vector3.Distance(_InputTansform, TownChar.position);
-                return result1;
-
-        }
-
-        return -1;
+        float result = Vector3.Distance(_InputTansform, transform.position);
+        return result;
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)

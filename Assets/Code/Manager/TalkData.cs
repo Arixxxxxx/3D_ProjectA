@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI;
+
+
+
 
 public class TalkData : MonoBehaviour
 {
@@ -57,6 +56,7 @@ public class TalkData : MonoBehaviour
         TalkList.Add(100, new string[] { "안녕하세요. 이곳에 오신걸 환영합니다.\n 앞에 있는 마을로가서 퀘스트를 받고 마을을 체험해보세요.", "행운을 빌겠습니다." });
         TalkList.Add(101, new string[] { "마을에 잘 찾아오셨네요!\n 마을안에 게시판에서 추가적인 퀘스트를 받을 수 있습니다.\n 마을을 둘러보세요. :)" });
         TalkList.Add(102, new string[] { "아직 드릴말씀이 없네요. 나중에 다시 찾아오세요.." });
+        TalkList.Add(103, new string[] { "이제 전투에 대해서 알아볼 시간입니다. \n 앞에 무기 2개를 내려놓았으니 획득해보세요." });
     }
 
 

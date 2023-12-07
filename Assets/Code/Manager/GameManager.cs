@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     private bool isCursorOn;
     private bool inHomeTown;
     [SerializeField] private bool isWindowOpen;
+    [SerializeField] NPC_Talk_Num Unity_Chan;
 
     private UnityAction<bool> readyAction;
 
@@ -117,5 +118,14 @@ public class GameManager : MonoBehaviour
     public bool F_Windows_Popup()
     {
         return isWindowOpen;
+    }
+
+    /// <summary>
+    /// Npc ID/TalkNum 증가 매개변수 0=ID / 
+    /// </summary>
+    /// <param name="value"></param>
+    public void F_NPC_TalkNum_Up(int value)
+    {
+        Unity_Chan.F_ValueUpdate(value);
     }
 }

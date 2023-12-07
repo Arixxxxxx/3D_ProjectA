@@ -14,6 +14,7 @@ public class QuestManager : MonoBehaviour
     [Space]
     [SerializeField] GameObject[] UI_Quest;
     [SerializeField] Transform UI_QuestList;
+    [SerializeField] QuestBoard QuestBoard;
     [Header("# UIQuestObj & Town QuestBoard")]
     [Space]
     [SerializeField] GameObject[] Board_Quest_Prefabs;
@@ -87,6 +88,7 @@ public class QuestManager : MonoBehaviour
     // 퀘스트넘버 올라가면 보드에 퀘스트 받을수있게 버튼 생성
     bool Quest1Start;
     bool Quest2Start;
+    bool Quest3Start;
     private void Insert_Quest_Board_Prefabs()
     {
         switch (player_Quest_Num)
@@ -98,6 +100,9 @@ public class QuestManager : MonoBehaviour
                     GameObject obj = Instantiate(Board_Quest_Prefabs[player_Quest_Num - 1]);
                     QuestBoard_Prefab_List.Add(obj);
                     obj.transform.SetParent(TownQuestBoardSlot);
+                    QuestBoard.F_Swich_Maker(1);
+
+
                 }
                 break;
 
@@ -108,6 +113,19 @@ public class QuestManager : MonoBehaviour
                     GameObject obj = Instantiate(Board_Quest_Prefabs[player_Quest_Num - 1]);
                     QuestBoard_Prefab_List.Add(obj);
                     obj.transform.SetParent(TownQuestBoardSlot);
+                    QuestBoard.F_Swich_Maker(1);
+                }
+                break;
+
+
+            case 3:
+                if (!Quest3Start)
+                {
+                    Quest3Start = true;
+                    GameObject obj = Instantiate(Board_Quest_Prefabs[player_Quest_Num - 1]);
+                    QuestBoard_Prefab_List.Add(obj);
+                    obj.transform.SetParent(TownQuestBoardSlot);
+                    QuestBoard.F_Swich_Maker(1);
                 }
                 break;
         }
@@ -188,6 +206,7 @@ public class QuestManager : MonoBehaviour
             if (Cur_Ea_QuestNum[value] == Max_Ea_QuestNum[value])
             {
                 F_Set_Quest(value);
+                QuestBoard.F_Swich_Maker(0);
             }
         }
     }
@@ -199,9 +218,12 @@ public class QuestManager : MonoBehaviour
         {
             case 1:
                 Q1_Obj_Group.SetActive(true);
+            break;
 
-
+            case 2:
+                Q2_Obj_Group.SetActive(true);
                 break;
+
         }
 
     }
@@ -283,4 +305,5 @@ public class QuestManager : MonoBehaviour
 
         return result;
     }
+   
 }
