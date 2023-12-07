@@ -157,11 +157,12 @@ public class TalkData : MonoBehaviour
     {
         switch (NearNpc.name)
         {
-            case "unitychan":
+            case "Main_NPC":
 
                 switch (CurNpcNum)
                 {
                     case 100:
+                        Debug.Log("11");
                         StartCoroutine(Event_100());
                         break;
 
