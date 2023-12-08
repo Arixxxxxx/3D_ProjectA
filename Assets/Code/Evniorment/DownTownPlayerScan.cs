@@ -42,6 +42,7 @@ public class DownTownPlayerScan : MonoBehaviour
 
     }
 
+    bool once, once1;
     private void OnTriggerEnter(Collider other)
     {
 
@@ -56,8 +57,8 @@ public class DownTownPlayerScan : MonoBehaviour
                         questionBox.gameObject.SetActive(true);
                     }
                     questionText.text = $"마을에 들어가시겠습니까?";
-                    yesButton.onClick.AddListener(() => { StartCoroutine(EnterButton()); });
-                    
+                    yesButton.onClick.AddListener(() =>  StartCoroutine(EnterButton()));
+                    noButton.onClick.AddListener(() => { questionBox.gameObject.SetActive(false); GameManager.Inst.F_SetScreenCursorOnOFF(false); });
                 }
                 break;
 
@@ -69,7 +70,8 @@ public class DownTownPlayerScan : MonoBehaviour
                         questionBox.gameObject.SetActive(true);
                     }
                     questionText.text = $"마을에서 나가시겠습니까?";
-                    yesButton.onClick.AddListener(() => { StartCoroutine(EnterButton()); });
+                    yesButton.onClick.AddListener(() => StartCoroutine(EnterButton()));
+                    noButton.onClick.AddListener(() => { questionBox.gameObject.SetActive(false); GameManager.Inst.F_SetScreenCursorOnOFF(false); });
                 }
                 break;
 
@@ -84,7 +86,9 @@ public class DownTownPlayerScan : MonoBehaviour
         {
             case EnterType.TownIn:
                 GameUIManager.Inst.F_BlackScrrenOn(); //블랙커튼
+
                 yield return waitCutten;
+
                 GameManager.Inst.F_SetScreenCursorOnOFF(true);
                 anim.Isdodge = false;
                 player.F_ModeSelect("normal");
@@ -96,6 +100,7 @@ public class DownTownPlayerScan : MonoBehaviour
                 questionBox.gameObject.SetActive(false);
                 yield return waitCutten;
                 GameUIManager.Inst.F_PlaceNameArt_OnOFF(1);
+                once = false;
 
                 break;
 
@@ -110,6 +115,7 @@ public class DownTownPlayerScan : MonoBehaviour
                 GameManager.Inst.F_SetScreenCursorOnOFF(false);
                 yield return waitCutten;
                 GameUIManager.Inst.F_PlaceNameArt_OnOFF(0);
+                once1 = false;
 
                 break;
 

@@ -30,7 +30,7 @@ public class PlayerNavMeshSC : MonoBehaviour
     Vector3 veloVec;
     private void Update()
     {
-        if (questBox_Obj.activeSelf)
+        if (questBox_Obj.activeSelf && Gm.IsWindowOpen == true)
         {
             nav.SetDestination(transform.position);
         }

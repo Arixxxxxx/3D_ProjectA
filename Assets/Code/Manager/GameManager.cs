@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
     
     private void GameUI_Or_WindowOn_Cheaker()
     {
-        if (InsertWindow_Obj[0].gameObject.activeSelf == true || InsertWindow_Obj[1].gameObject.activeSelf == true)
+        if (InsertWindow_Obj[0].gameObject.activeSelf == true || InsertWindow_Obj[1].gameObject.activeSelf == true || InsertWindow_Obj[2].gameObject.activeSelf == true)
         {
             IsWindowOpen = true;
         }

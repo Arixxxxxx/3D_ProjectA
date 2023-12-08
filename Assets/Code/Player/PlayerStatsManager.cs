@@ -74,7 +74,7 @@ public class PlayerStatsManager : MonoBehaviour
         CurHP -= DMG;
     }
 
-    
+
 
     /// <summary>
     /// 플레이어 대미지 리턴 0 = Melee / 1 Range
@@ -90,7 +90,7 @@ public class PlayerStatsManager : MonoBehaviour
                 Dmg[0] = MeleeMinDMG;
                 Dmg[1] = MeleeMaxDMG;
                 return Dmg;
-                
+
 
             case 1:
                 Dmg[0] = RangeMinDMG;
@@ -101,5 +101,10 @@ public class PlayerStatsManager : MonoBehaviour
 
         return default;
 
+    }
+
+    public void F_Recovery_HP()
+    {
+        CurHP = MaxHP;
     }
 }
