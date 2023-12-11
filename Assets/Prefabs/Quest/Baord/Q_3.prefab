@@ -64,7 +64,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3504725027104547879}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 246.46826}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -348,7 +348,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uBB34\uAE30\uB97C \uC9C0\uAE09\uBC1B\uACE0 \uACF5\uACA9\uB2A5\uB825 \uBC30\uC6B0\uAE30"
+  m_text: "\uB300\uC7A5\uAC04\uC5D0\uC11C \uBB34\uAE30\uB97C \uAD6C\uB9E4\uD558\uC138\uC694."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5125ad6f930a4cb4ea76b8871b983afb, type: 2}
   m_sharedMaterial: {fileID: -5742506467406215478, guid: 5125ad6f930a4cb4ea76b8871b983afb, type: 2}
@@ -682,7 +682,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "< \uAC8C\uC784\uAC00\uC774\uB4DC\uC5D0\uAC8C \uB3CC\uC544\uAC00\uAE30>\n"
+  m_text: "< \uC0C1\uC810\uC5D0\uC11C \uBB34\uAE30 \uAD6C\uB9E4>\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5125ad6f930a4cb4ea76b8871b983afb, type: 2}
   m_sharedMaterial: {fileID: -5742506467406215478, guid: 5125ad6f930a4cb4ea76b8871b983afb, type: 2}

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using static UnityEngine.Rendering.DebugUI;
+
 
 public class QuestManager : MonoBehaviour
 {
@@ -32,6 +32,7 @@ public class QuestManager : MonoBehaviour
     [SerializeField] Dictionary<int, int> PlayerQuest_Situation = new Dictionary<int, int>();
 
     List<GameObject> CurPlayQuest = new List<GameObject>();
+    
     List<GameObject> QuestBoard_Prefab_List = new List<GameObject>();
 
     Transform CompleteQuestTransform;
@@ -89,6 +90,7 @@ public class QuestManager : MonoBehaviour
     bool Quest1Start;
     bool Quest2Start;
     bool Quest3Start;
+    bool Quest4Start;
     private void Insert_Quest_Board_Prefabs()
     {
         switch (player_Quest_Num)
@@ -128,6 +130,17 @@ public class QuestManager : MonoBehaviour
                     QuestBoard.F_Swich_Maker(1);
                 }
                 break;
+
+            case 4:
+                if (!Quest4Start)
+                {
+                    Quest4Start = true;
+                    GameObject obj = Instantiate(Board_Quest_Prefabs[player_Quest_Num - 1]);
+                    QuestBoard_Prefab_List.Add(obj);
+                    obj.transform.SetParent(TownQuestBoardSlot);
+                    QuestBoard.F_Swich_Maker(1);
+                }
+                break;
         }
     }
 
@@ -144,18 +157,9 @@ public class QuestManager : MonoBehaviour
     /// <param name="_Quest_Num"> 퀘스트 진행사항</param>
     public void F_Set_Quest(int _Quest_ID)
     {
-        //for (int i = 0; i < QuestCount; i++)
-        //{
-        //    if (i == _Quest_ID)
-        //    {
-        //        PlayerQuest_Situation[i] = _Quest_Num;
-
-        //    }
-        //}
-
         Cheak_Quest_Acept_Update(_Quest_ID);
-
     }
+
 
     // 0 퀘스트 대기(수락하면) // 1 진행중 채움->2 진행완료 -> 3 완료 -> 4
     // 퀘스트 받았음을 해당 위치에서 켜주는 함수
@@ -167,7 +171,7 @@ public class QuestManager : MonoBehaviour
         {
             PlayerQuest_Situation[value] = 1;
             F_Insert_Ui_QuestList(value);
-            StartCoroutine(anim(value));
+            StartCoroutine(anim(value)); // 퀘스트 진행시작 UI
             Enable_Quest_Obj(value); // 켜줄께 잇다면 퀘스트 오브젝트 켜줌
         }
         else if (PlayerQuest_Situation[value] == 1) //진행중
@@ -244,6 +248,14 @@ public class QuestManager : MonoBehaviour
             case 2:
                 questAcceptWindowText.text = $"퀘스트 갱신 : 호수에서 보물상자 찾기";
                 break;
+
+            case 3:
+                questAcceptWindowText.text = $"퀘스트 갱신 : 근접 무기 얻기";
+                break;
+
+            case 4:
+                questAcceptWindowText.text = $"퀘스트 갱신 : 가이드NPC 다시 만나기";
+                break;
         }
 
 
@@ -277,11 +289,13 @@ public class QuestManager : MonoBehaviour
     // 메인화면 UI 및 퀘스트보더에서 퀘스트 내용 제거 [완료시]
     public void F_Complete_Ui_QuestList(int value)
     {
+        
         CurPlayQuest[value].transform.SetParent(CompleteQuestTransform);
         CurPlayQuest[value].gameObject.SetActive(false);
 
         if (value > 0)  // 0번 마을찾기만 예외
         {
+        
             QuestBoard_Prefab_List[value - 1].transform.SetParent(CompleteQuestTransform);
             QuestBoard_Prefab_List[value - 1].gameObject.SetActive(false);
         }

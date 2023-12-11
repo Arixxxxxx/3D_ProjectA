@@ -8,6 +8,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Inst;
     [SerializeField] GameObject[] InsertWindow_Obj;
+    [Header("# Player Weapon Acitve")]
+    bool isget_Melee_Weapon;
+    public bool Isget_Melee_Weapon { get { return isget_Melee_Weapon; } set { isget_Melee_Weapon = value; } }
+
+     bool isget_Range_Weapon;
+    public bool Isget_Range_Weapon { get { return isget_Range_Weapon; } set { isget_Range_Weapon = value; } }
 
     private GameObject water_Obj;
     public GameObject Water_Obj { get { return water_Obj; } set { water_Obj = value; } }
@@ -21,17 +27,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool isWindowOpen;
     [SerializeField] NPC_Talk_Num Unity_Chan;
 
+
     private UnityAction<bool> readyAction;
 
-    public bool IsWindowOpen {
+    public bool IsWindowOpen
+    {
         set
         {
             isWindowOpen = value;
             readyAction?.Invoke(IsWindowOpen);
         }
-        get 
+        get
         {
-            return isWindowOpen; 
+            return isWindowOpen;
         }
     }
 
@@ -40,7 +48,7 @@ public class GameManager : MonoBehaviour
         readyAction = _action;
     }
 
-    public bool InHomeTown {  get { return inHomeTown; } set { inHomeTown = value; } }
+    public bool InHomeTown { get { return inHomeTown; } set { inHomeTown = value; } }
 
     private void Awake()
     {
@@ -62,7 +70,7 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
     }
-    
+
     private void GameUI_Or_WindowOn_Cheaker()
     {
         if (InsertWindow_Obj[0].gameObject.activeSelf == true || InsertWindow_Obj[1].gameObject.activeSelf == true || InsertWindow_Obj[2].gameObject.activeSelf == true)
@@ -105,16 +113,16 @@ public class GameManager : MonoBehaviour
     }
     public bool F_GetMouseScrrenRotationStop()
     {
-        return  playerRotStop;
+        return playerRotStop;
     }
 
-   [SerializeField] bool no;
-    public bool NoChangeMode {  get { return no; } }
+    [SerializeField] bool no;
+    public bool NoChangeMode { get { return no; } }
     public void F_ModeChangeNo(bool value)
     {
         no = value;
-     }
-    
+    }
+
     public bool F_Windows_Popup()
     {
         return isWindowOpen;
@@ -127,5 +135,24 @@ public class GameManager : MonoBehaviour
     public void F_NPC_TalkNum_Up(int value)
     {
         Unity_Chan.F_ValueUpdate(value);
+    }
+
+    public void F_NPC_QuestMaker_Active_(int _NpcNumber, bool Swich)
+    {
+        switch (_NpcNumber)
+        {
+            case 0:
+                break;
+
+            case 1:
+
+                break;
+            case 2:
+
+                break;
+
+            case 3:
+                break;
+        }
     }
 }

@@ -43,19 +43,35 @@ public class QuestPreFabs : MonoBehaviour
                     QuestManager.inst.F_Set_Quest(QeustNum);
                     QuestBoardButton.interactable = false;
                     Board.F_Swich_Maker(2);
-                    GameManager.Inst.F_NPC_TalkNum_Up(0);
+                    
                 });
 
                 break;
 
 
             case QuestNumber.Q3:
-
+                QuestBoardButton.onClick.RemoveAllListeners();
                 QuestBoardButton.onClick.AddListener(() =>
                 {
                     QuestManager.inst.F_Set_Quest(QeustNum);
                     QuestBoardButton.interactable = false;
                     Board.F_Swich_Maker(2);
+                    TalkData.inst.F_Set_Npc_QuestMaker(2, 1);
+
+                });
+
+                break;
+
+            case QuestNumber.Q4:
+                QuestBoardButton.onClick.RemoveAllListeners();
+                QuestBoardButton.onClick.AddListener(() =>
+                {
+                    QuestManager.inst.F_Set_Quest(QeustNum);
+                    QuestBoardButton.interactable = false;
+                    Board.F_Swich_Maker(2);
+                    TalkData.inst.F_Set_Npc_QuestMaker(0, 1);
+                    TalkData.inst.F_Set_Npc_ID_ValueUp(0, 0);
+
                 });
 
                 break;
@@ -70,7 +86,7 @@ public class QuestPreFabs : MonoBehaviour
         switch (type)
         {
             case QuestNumber.Q1:
-            case QuestNumber.Q2:
+            case QuestNumber.Q2: // 버섯
 
                 Cur_Value = QuestManager.inst.F_Cur_Quest_Chaker(QeustNum);
 
@@ -100,7 +116,7 @@ public class QuestPreFabs : MonoBehaviour
                 }
                 break;
 
-            case QuestNumber.Q3:
+            case QuestNumber.Q3: // 호수 보물상자
 
                 Cur_Value = QuestManager.inst.F_Cur_Quest_Chaker(QeustNum);
 
@@ -127,6 +143,46 @@ public class QuestPreFabs : MonoBehaviour
                         GameUIManager.Inst.F_QuestComplete_UI_Open(QeustNum);
                         QuestManager.inst.F_player_Quest_Num_Up();
                     });
+                }
+                break;
+
+            case QuestNumber.Q4: // 무기 획득
+
+                Cur_Value = QuestManager.inst.F_Cur_Quest_Chaker(QeustNum);
+
+                if (Cur_Value == 0 && WaitMaker.gameObject.activeSelf == false)
+                {
+                    WaitMaker.gameObject.SetActive(true);
+                }
+                else if (Cur_Value == 1 && Quest_Ing.gameObject.activeSelf == false)
+                {
+                    WaitMaker.gameObject.SetActive(false);
+                    Quest_Ing.gameObject.SetActive(true);
+                }
+                else if (Cur_Value == 2 && Complete.gameObject.activeSelf == false) // 퀘스트 진행사항 완료
+                {
+                   gameObject.SetActive(false);
+                }
+                break;
+
+            case QuestNumber.Q5: // 가이드 찾아가기
+
+                Cur_Value = QuestManager.inst.F_Cur_Quest_Chaker(QeustNum);
+
+                if (Cur_Value == 0 && WaitMaker.gameObject.activeSelf == false)
+                {
+                    WaitMaker.gameObject.SetActive(true);
+                }
+                else if (Cur_Value == 1 && Quest_Ing.gameObject.activeSelf == false)
+                {
+                    WaitMaker.gameObject.SetActive(false);
+                    Quest_Ing.gameObject.SetActive(true);
+                }
+                else if (Cur_Value == 2 && Complete.gameObject.activeSelf == false) // 퀘스트 진행사항 완료
+                {
+                    GameUIManager.Inst.F_QuestComplete_UI_Open(QeustNum);
+                    QuestManager.inst.F_player_Quest_Num_Up();
+                    gameObject.SetActive(false);
                 }
                 break;
         }

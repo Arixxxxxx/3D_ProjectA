@@ -109,6 +109,11 @@ public class GameUIManager : MonoBehaviour
                 QeustCompleteBosang.sprite = QuestBosang_IMG[0];
                 MiddleText.text = "< 호수속 보물상자 완료 >";
                 break;
+
+            case 3:
+                QeustCompleteBosang.sprite = QuestBosang_IMG[0];
+                MiddleText.text = "< 무기 획득 완료>";
+                break;
         }
 
         if (QuestCompleteAnim.gameObject.activeSelf == false)

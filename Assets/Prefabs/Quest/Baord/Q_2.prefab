@@ -64,7 +64,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3504725027104547879}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 246.46826}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -132,6 +132,7 @@ MonoBehaviour:
   WaitMaker: {fileID: 0}
   Quest_Ing: {fileID: 0}
   Complete: {fileID: 0}
+  Board: {fileID: 0}
 --- !u!1 &3646305116984955273
 GameObject:
   m_ObjectHideFlags: 0

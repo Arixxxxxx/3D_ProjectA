@@ -21,7 +21,7 @@ public class Town_Npc_Animation : MonoBehaviour
     [SerializeField] GameObject TownCam;
     [SerializeField] GameObject NpcCam;
     [SerializeField] Transform LookPoint;
-
+    Npc_Talk talking;
     Vector3 OriginPos;
     Vector3 OriginRot;
 
@@ -31,7 +31,7 @@ public class Town_Npc_Animation : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-
+        talking = GetComponent<Npc_Talk>();
         switch (type) 
         {
           case NPC_Num.Weapon:
@@ -94,12 +94,17 @@ public class Town_Npc_Animation : MonoBehaviour
         doTalking = false;
         anim.SetBool("Look", false);
         NPC_Camera_Swap(1);
-
+        
         switch (type)
         {
+            case NPC_Num.Food:
+                talking.F_Talk_NPC("또 오세요!");
+                break;
+
             case NPC_Num.Weapon:
                 transform.position = OriginPos;
                 transform.eulerAngles = OriginRot;
+                talking.F_Talk_NPC("감사합니다!");
                 break;
         }
     }
